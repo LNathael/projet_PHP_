@@ -1,0 +1,117 @@
+{
+  "entities": [
+    {
+      "name": "Utilisateur",
+      "attributes": [
+        { "name": "id_utilisateur", "type": "int", "key": "PK" },
+        { "name": "nom", "type": "varchar(100)" },
+        { "name": "prenom", "type": "varchar(100)" },
+        { "name": "email", "type": "varchar(150)" },
+        { "name": "mot_de_passe", "type": "varchar(255)" },
+        { "name": "role", "type": "enum('utilisateur','administrateur')" },
+        { "name": "date_naissance", "type": "date" },
+        { "name": "sexe", "type": "enum('Homme','Femme','Autre')" },
+        { "name": "date_creation", "type": "timestamp" }
+      ]
+    },
+    {
+      "name": "Produit",
+      "attributes": [
+        { "name": "id_produit", "type": "int", "key": "PK" },
+        { "name": "nom_produit", "type": "varchar(100)" },
+        { "name": "description", "type": "text" },
+        { "name": "prix", "type": "decimal(10,2)" },
+        { "name": "quantite_disponible", "type": "int" },
+        { "name": "libelle", "type": "varchar(50)" }
+      ]
+    },
+    {
+      "name": "Panier",
+      "attributes": [
+        { "name": "id_panier", "type": "int", "key": "PK" },
+        { "name": "id_utilisateur", "type": "int", "key": "FK" }
+      ]
+    },
+    {
+      "name": "Ligne_Panier",
+      "attributes": [
+        { "name": "id_ligne_panier", "type": "int", "key": "PK" },
+        { "name": "id_panier", "type": "int", "key": "FK" },
+        { "name": "id_produit", "type": "int", "key": "FK" },
+        { "name": "quantite", "type": "int" }
+      ]
+    },
+    {
+      "name": "Commande",
+      "attributes": [
+        { "name": "id_commande", "type": "int", "key": "PK" },
+        { "name": "id_utilisateur", "type": "int", "key": "FK" },
+        { "name": "date_commande", "type": "timestamp" },
+        { "name": "statut_commande", "type": "enum('en cours','validée','expédiée','livrée','annulée')" }
+      ]
+    },
+    {
+      "name": "Ligne_Commande",
+      "attributes": [
+        { "name": "id_ligne_commande", "type": "int", "key": "PK" },
+        { "name": "id_commande", "type": "int", "key": "FK" },
+        { "name": "id_produit", "type": "int", "key": "FK" },
+        { "name": "quantite", "type": "int" },
+        { "name": "prix_unitaire", "type": "decimal(10,2)" }
+      ]
+    },
+    {
+      "name": "Avis",
+      "attributes": [
+        { "name": "id_avis", "type": "int", "key": "PK" },
+        { "name": "id_produit", "type": "int", "key": "FK" },
+        { "name": "id_utilisateur", "type": "int", "key": "FK" },
+        { "name": "commentaire", "type": "text" },
+        { "name": "note", "type": "int" },
+        { "name": "date_avis", "type": "timestamp" }
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "from": "Utilisateur",
+      "to": "Panier",
+      "type": "1,1"
+    },
+    {
+      "from": "Panier",
+      "to": "Ligne_Panier",
+      "type": "1,N"
+    },
+    {
+      "from": "Ligne_Panier",
+      "to": "Produit",
+      "type": "N,1"
+    },
+    {
+      "from": "Utilisateur",
+      "to": "Commande",
+      "type": "1,N"
+    },
+    {
+      "from": "Commande",
+      "to": "Ligne_Commande",
+      "type": "1,N"
+    },
+    {
+      "from": "Ligne_Commande",
+      "to": "Produit",
+      "type": "N,1"
+    },
+    {
+      "from": "Produit",
+      "to": "Avis",
+      "type": "1,N"
+    },
+    {
+      "from": "Utilisateur",
+      "to": "Avis",
+      "type": "1,N"
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MCD>
+    <Entities>
+        <Entity name="Utilisateur">
+            <Attribute name="id_utilisateur" type="int" primaryKey="true" autoIncrement="true"/>
+            <Attribute name="nom" type="varchar(100)"/>
+            <Attribute name="prenom" type="varchar(100)"/>
+            <Attribute name="email" type="varchar(150)" unique="true"/>
+            <Attribute name="mot_de_passe" type="varchar(255)"/>
+            <Attribute name="role" type="enum('utilisateur','administrateur')"/>
+            <Attribute name="date_naissance" type="date"/>
+            <Attribute name="sexe" type="enum('Homme','Femme','Autre')"/>
+            <Attribute name="date_creation" type="timestamp" default="CURRENT_TIMESTAMP"/>
+        </Entity>
+
+        <Entity name="Produit">
+            <Attribute name="id_produit" type="int" primaryKey="true" autoIncrement="true"/>
+            <Attribute name="nom_produit" type="varchar(100)"/>
+            <Attribute name="description" type="text"/>
+            <Attribute name="prix" type="decimal(10,2)"/>
+            <Attribute name="quantite_disponible" type="int"/>
+            <Attribute name="libelle" type="varchar(50)"/>
+        </Entity>
+
+        <Entity name="Panier">
+            <Attribute name="id_panier" type="int" primaryKey="true" autoIncrement="true"/>
+            <Attribute name="id_utilisateur" type="int"/>
+        </Entity>
+
+        <Entity name="Ligne_Panier">
+            <Attribute name="id_ligne_panier" type="int" primaryKey="true" autoIncrement="true"/>
+            <Attribute name="id_panier" type="int"/>
+            <Attribute name="id_produit" type="int"/>
+            <Attribute name="quantite" type="int"/>
+        </Entity>
+
+        <Entity name="Commande">
+            <Attribute name="id_commande" type="int" primaryKey="true" autoIncrement="true"/>
+            <Attribute name="id_utilisateur" type="int"/>
+            <Attribute name="date_commande" type="timestamp" default="CURRENT_TIMESTAMP"/>
+            <Attribute name="statut_commande" type="enum('en cours','validée','expédiée','livrée','annulée')" default="en cours"/>
+        </Entity>
+
+        <Entity name="Ligne_Commande">
+            <Attribute name="id_ligne_commande" type="int" primaryKey="true" autoIncrement="true"/>
+            <Attribute name="id_commande" type="int"/>
+            <Attribute name="id_produit" type="int"/>
+            <Attribute name="quantite" type="int"/>
+            <Attribute name="prix_unitaire" type="decimal(10,2)"/>
+        </Entity>
+
+        <Entity name="Avis">
+            <Attribute name="id_avis" type="int" primaryKey="true" autoIncrement="true"/>
+            <Attribute name="id_produit" type="int"/>
+            <Attribute name="id_utilisateur" type="int"/>
+            <Attribute name="commentaire" type="text"/>
+            <Attribute name="note" type="int" constraints="CHECK(note BETWEEN 1 AND 5)"/>
+            <Attribute name="date_avis" type="timestamp" default="CURRENT_TIMESTAMP"/>
+        </Entity>
+    </Entities>
+
+    <Relationships>
+        <Relationship name="Possède" from="Utilisateur" to="Panier" cardinalityFrom="1,1" cardinalityTo="0,1">
+            <ForeignKey fromEntity="Panier" fromAttribute="id_utilisateur" toEntity="Utilisateur" toAttribute="id_utilisateur" onDelete="CASCADE"/>
+        </Relationship>
+
+        <Relationship name="Contient" from="Panier" to="Ligne_Panier" cardinalityFrom="1,N" cardinalityTo="1,1">
+            <ForeignKey fromEntity="Ligne_Panier" fromAttribute="id_panier" toEntity="Panier" toAttribute="id_panier" onDelete="CASCADE"/>
+        </Relationship>
+
+        <Relationship name="Inclut" from="Ligne_Panier" to="Produit" cardinalityFrom="N,1" cardinalityTo="1,1">
+            <ForeignKey fromEntity="Ligne_Panier" fromAttribute="id_produit" toEntity="Produit" toAttribute="id_produit" onDelete="CASCADE"/>
+        </Relationship>
+
+        <Relationship name="Passe" from="Utilisateur" to="Commande" cardinalityFrom="1,N" cardinalityTo="0,1">
+            <ForeignKey fromEntity="Commande" fromAttribute="id_utilisateur" toEntity="Utilisateur" toAttribute="id_utilisateur" onDelete="CASCADE"/>
+        </Relationship>
+
+        <Relationship name="Contient" from="Commande" to="Ligne_Commande" cardinalityFrom="1,N" cardinalityTo="1,1">
+            <ForeignKey fromEntity="Ligne_Commande" fromAttribute="id_commande" toEntity="Commande" toAttribute="id_commande" onDelete="CASCADE"/>
+        </Relationship>
+
+        <Relationship name="Inclut" from="Ligne_Commande" to="Produit" cardinalityFrom="N,1" cardinalityTo="1,1">
+            <ForeignKey fromEntity="Ligne_Commande" fromAttribute="id_produit" toEntity="Produit" toAttribute="id_produit" onDelete="CASCADE"/>
+        </Relationship>
+
+        <Relationship name="Reçoit" from="Produit" to="Avis" cardinalityFrom="1,N" cardinalityTo="1,1">
+            <ForeignKey fromEntity="Avis" fromAttribute="id_produit" toEntity="Produit" toAttribute="id_produit" onDelete="CASCADE"/>
+        </Relationship>
+
+        <Relationship name="Émet" from="Utilisateur" to="Avis" cardinalityFrom="1,N" cardinalityTo="1,1">
+            <ForeignKey fromEntity="Avis" fromAttribute="id_utilisateur" toEntity="Utilisateur" toAttribute="id_utilisateur" onDelete="CASCADE"/>
+        </Relationship>
+    </Relationships>
+</MCD>
