@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['email'] = $utilisateur['email'];
                 $_SESSION['role'] = $utilisateur['role']; // Gestion des rôles
 
-                header("Location: Acceuil_connecter.php");
+                header("Location: accueil.php");
                 exit();
             } else {
                 $erreurs[] = "Email ou mot de passe incorrect.";
