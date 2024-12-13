@@ -3,9 +3,9 @@
 include '../includes/header.php'; 
 
 // Vérifier si une recherche a été effectuée
-if (isset($_GET['query']) && !empty(trim($_GET['query']))) {
-    // Nettoyer la requête pour éviter les injections
-    $query = htmlspecialchars($_GET['query']);
+if (isset($_GET['query']) && strlen(trim($_GET['query'])) > 0) {
+    // Nettoyer et récupérer la requête
+    $query = htmlspecialchars(trim($_GET['query']));
 
     // Afficher le terme recherché
     echo "<h1 class='title is-4'>Résultats de recherche pour : <span class='has-text-primary'>$query</span></h1>";
@@ -41,7 +41,13 @@ if (isset($_GET['query']) && !empty(trim($_GET['query']))) {
     if (!empty($resultats)) {
         echo "<ul class='content'>";
         foreach ($resultats as $resultat) {
-            $highlighted = str_ireplace($query, "<span class='has-background-warning'>$query</span>", $resultat['contenu']);
+            // Mettre en évidence les termes de recherche dans le contenu
+            $keywords = explode(' ', $query);
+            $highlighted = $resultat['contenu'];
+            foreach ($keywords as $word) {
+                $highlighted = str_ireplace($word, "<span class='has-background-warning'>$word</span>", $highlighted);
+            }
+
             echo "<li>
                 <a href='{$resultat['lien']}' class='has-text-link'><strong>{$resultat['titre']}</strong></a>
                 <p>$highlighted</p>
@@ -52,9 +58,10 @@ if (isset($_GET['query']) && !empty(trim($_GET['query']))) {
         // Aucun résultat
         echo "<p class='has-text-danger'>Aucun résultat trouvé pour votre recherche.</p>";
     }
+
 } else {
-    // Si aucune recherche n'a été effectuée
-    echo "<h1 class='title is-4'>Veuillez saisir un terme de recherche.</h1>";
+    // Si aucune recherche valide n'a été effectuée
+    echo "<h1 class='title is-4'>Veuillez saisir un terme de recherche valide.</h1>";
 }
 
 // Inclure le footer

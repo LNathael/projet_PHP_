@@ -33,6 +33,7 @@ if (session_status() === PHP_SESSION_NONE) {
                 <a class="navbar-item" href="../pages/accueil.php">Accueil</a>
                 <a class="navbar-item" href="../pages/magasin.php">Magasin</a>
                 <a class="navbar-item" href="../pages/calculateur_calories.php">Calculateur de calories</a>
+                <a class="navbar-item" href="../pages/blog.php">Blog</a>
 
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link">Programmes</a>
@@ -43,7 +44,7 @@ if (session_status() === PHP_SESSION_NONE) {
                     </div>
                 </div>
 
-                <a class="navbar-item" href="../pages/blog.php">Blog</a>
+                
             </div>
 
             <div class="navbar-end">
