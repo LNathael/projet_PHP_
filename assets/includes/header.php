@@ -1,5 +1,4 @@
-
-<?php
+<?php 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -11,13 +10,14 @@ if (session_status() === PHP_SESSION_NONE) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <title>Projet Achat</title>
 </head>
 <body>
 <header>
     <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-            <a class="navbar-item" href="accueil.php">
+            <a class="navbar-item" href="../pages/accueil.php">
                 <img src="../img/logo.png" alt="Logo" width="40" height="40">
             </a>
 
@@ -32,36 +32,39 @@ if (session_status() === PHP_SESSION_NONE) {
             <div class="navbar-start">
                 <a class="navbar-item" href="../pages/accueil.php">Accueil</a>
                 <a class="navbar-item" href="../pages/magasin.php">Magasin</a>
-                <a class="navbar-item" href="../pages/contact.php">Contact</a>
+                <a class="navbar-item" href="../pages/calculateur_calories.php">Calculateur de calories</a>
 
                 <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link">Plus</a>
+                    <a class="navbar-link">Programmes</a>
                     <div class="navbar-dropdown">
-                        <a class="navbar-item" href="../pages/mentions_legales.php">Mentions légales</a>
-                        <a class="navbar-item" href="../pages/a_propos.php">À propos</a>
+                        <a class="navbar-item" href="../pages/programmes_masse.php">Prise de masse</a>
+                        <a class="navbar-item" href="../pages/programmes_perte.php">Perte de poids</a>
+                        <a class="navbar-item" href="../pages/programmes_debutants.php">Débutants</a>
                     </div>
                 </div>
+
+                <a class="navbar-item" href="../pages/blog.php">Blog</a>
             </div>
 
             <div class="navbar-end">
                 <div class="navbar-item">
+                    <form action="../pages/recherche.php" method="GET">
+                        <input class="input is-rounded" type="text" name="query" placeholder="Rechercher...">
+                </div>
+                <div class="navbar-item">
+                    <a href="../pages/panier.php" class="button is-warning">
+                        <span>Panier</span>
+                        <span class="tag is-light"><?= isset($_SESSION['cart_count']) ? $_SESSION['cart_count'] : 0; ?></span>
+                    </a>
+                </div>
+                <div class="navbar-item">
                     <div class="buttons">
                         <?php if (isset($_SESSION['user_id'])): ?>
-                            <!-- Menu pour utilisateur connecté -->
-                            <a class="button is-light" href="../pages/compte.php">
-                                Mon compte
-                            </a>
-                            <a class="button is-danger" href="../pages/deconnexion.php">
-                                Déconnexion
-                            </a>
+                            <a class="button is-light" href="../pages/compte.php">Mon compte</a>
+                            <a class="button is-danger" href="../pages/deconnexion.php">Déconnexion</a>
                         <?php else: ?>
-                            <!-- Menu pour utilisateur non connecté -->
-                            <a class="button is-primary" href="../pages/inscription.php">
-                                <strong>S'inscrire</strong>
-                            </a>
-                            <a class="button is-light" href="../pages/connexion.php">
-                                Se connecter
-                            </a>
+                            <a class="button is-primary" href="../pages/inscription.php"><strong>S'inscrire</strong></a>
+                            <a class="button is-light" href="../pages/connexion.php">Se connecter</a>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -69,5 +72,3 @@ if (session_status() === PHP_SESSION_NONE) {
         </div>
     </nav>
 </header>
-</body>
-</html>
