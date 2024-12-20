@@ -51,6 +51,7 @@ if (session_status() === PHP_SESSION_NONE) {
                 <div class="navbar-item">
                     <form action="../pages/recherche.php" method="GET">
                         <input class="input is-rounded" type="text" name="query" placeholder="Rechercher...">
+                    </form>
                 </div>
         
 
