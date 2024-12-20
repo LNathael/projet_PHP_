@@ -1,8 +1,8 @@
-<?php include '../includes/header.php'; ?>
+<?php include ROOT_PATH . 'includes/header.php'; ?>
 <main class="container mt-5">
     <article class="content">
         <h1 class="title is-3">5 conseils pour optimiser votre prise de masse</h1>
-        <p>La prise de masse est un objectif courant pour beaucoup de sportifs. Voici quelques conseils pour y parvenir efficacement :</p>
+        <p>La prise de masse est un objectif coura  nt pour beaucoup de sportifs. Voici quelques conseils pour y parvenir efficacement :</p>
         <ol>
             <li>
                 <strong>Adoptez un surplus calorique</strong> :
@@ -28,4 +28,4 @@
         <p>En suivant ces conseils, vous serez en bonne voie pour atteindre vos objectifs de prise de masse.</p>
     </article>
 </main>
-<?php include '../includes/footer.php'; ?>
+<?php include ROOT_PATH . 'includes/footer.php'; ?>

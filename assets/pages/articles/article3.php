@@ -1,4 +1,4 @@
-<?php include '../includes/header.php'; ?>
+<?php include ROOT_PATH . 'includes/header.php'; ?>
 <main class="container mt-5">
     <article class="content">
         <h1 class="title is-3">Routine d'entraînement pour les débutants</h1>
@@ -27,4 +27,4 @@
         <p>Ce programme est un excellent point de départ pour développer votre force et votre endurance. N'oubliez pas de vous échauffer avant chaque séance et de vous étirer après !</p>
     </article>
 </main>
-<?php include '../includes/footer.php'; ?>
+<?php include ROOT_PATH . 'includes/footer.php'; ?>

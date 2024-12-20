@@ -1,4 +1,4 @@
-<?php include '../includes/header.php'; ?>
+<?php include ROOT_PATH . 'includes/header.php'; ?>
 <main class="container mt-5">
     <article class="content">
         <h1 class="title is-3">Les aliments à privilégier pour la perte de poids</h1>
@@ -28,4 +28,4 @@
         <p>Adopter ces aliments dans votre routine vous aidera à perdre du poids tout en restant en bonne santé.</p>
     </article>
 </main>
-<?php include '../includes/footer.php'; ?>
+<?php include ROOT_PATH . 'includes/footer.php'; ?>
