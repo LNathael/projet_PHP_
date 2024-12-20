@@ -3,12 +3,12 @@
 include '../includes/header.php'; 
 
 // Vérifier si une recherche a été effectuée
-if (isset($_GET['query']) && strlen(trim($_GET['query'])) > 0) {
-    // Nettoyer et récupérer la requête
+if (isset($_GET['query']) && !empty(trim($_GET['query']))) {
     $query = htmlspecialchars(trim($_GET['query']));
 
+
     // Afficher le terme recherché
-    echo "<h1 class='title is-4'>Résultats de recherche pour : <span class='has-text-primary'>$query</span></h1>";
+    echo "<h1>Résultats de recherche pour : $query</h1>";
 
     // Simuler des données (exemple) ou les extraire d'une base de données
     $pages = [

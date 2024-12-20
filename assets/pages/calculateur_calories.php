@@ -4,7 +4,7 @@
 <body>
 <main class="container">
     <h1 class="title has-text-centered">Calculateur de Calories</h1>
-    <form id="calorie-form" class="box" onsubmit="calculateCalories(event)">
+    <form id="calorie-form" action="../pages/calculateur_calories.php" method="POST" onsubmit="calculateCalories(event)">
         <div class="field">
             <label class="label">Âge (années) <span class="has-text-danger">*</span></label>
             <div class="control">
@@ -72,6 +72,7 @@
         <div class="field has-text-centered">
             <button type="submit" class="button is-primary">Calculer</button>
         </div>
+
     </form>
 
     <div id="result" class="notification is-info is-hidden">
@@ -82,9 +83,9 @@
 <?php include '../includes/footer.php'; ?>
 
 <script>
-    // Fonction pour calculer les calories
+    // Fonction de calcul des calories (inchangée)
     function calculateCalories(event) {
-        event.preventDefault(); // Empêche l'envoi du formulaire
+        event.preventDefault();
 
         // Récupérer les valeurs des champs
         const age = parseInt(document.getElementById('age').value);
@@ -94,29 +95,19 @@
         const activity = parseFloat(document.getElementById('activity').value);
         const goal = parseInt(document.getElementById('goal').value);
 
-        // Vérification des valeurs
         if (!age || !gender || !weight || !height || !activity || goal === null) {
             alert("Veuillez remplir tous les champs correctement.");
             return;
         }
 
-        // Calcul des besoins caloriques de base (TMB - Taux Métabolique Basal)
-        let bmr;
-        if (gender === "male") {
-            // Formule Harris-Benedict pour les hommes
-            bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
-        } else if (gender === "female") {
-            // Formule Harris-Benedict pour les femmes
-            bmr = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
-        }
+        // Calcul des besoins caloriques
+        let bmr = gender === "male"
+            ? 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age)
+            : 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
 
-        // Ajuster en fonction du niveau d'activité
         const maintenanceCalories = bmr * activity;
-
-        // Appliquer l'objectif
         const targetCalories = maintenanceCalories + goal;
 
-        // Afficher le résultat
         const resultDiv = document.getElementById('result');
         const resultText = document.getElementById('calorie-result');
 
@@ -125,8 +116,6 @@
         `;
 
         resultDiv.classList.remove('is-hidden');
-        return false; // Empêche également toute navigation
-
     }
 </script>
 </body>

@@ -52,6 +52,8 @@ if (session_status() === PHP_SESSION_NONE) {
                     <form action="../pages/recherche.php" method="GET">
                         <input class="input is-rounded" type="text" name="query" placeholder="Rechercher...">
                 </div>
+        
+
                 <div class="navbar-item">
                     <a href="../pages/panier.php" class="button is-warning">
                         <span>Panier</span>
