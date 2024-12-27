@@ -1,26 +1,43 @@
-<?php 
-include '../includes/header.php'; 
-include '../config/db.php'; // Remonte d'un niveau puis va dans "config/"
-
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+$isConnected = isset($_SESSION['user_id']);
 ?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceuil</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <title>Accueil</title>
 </head>
+<body>
+    <?php include '../includes/header.php'; ?>
 
-<main class="container mt-5">
+
+
+
+    <main class="container mt-5">
     <!-- Titre principal -->
     <section class="hero is-primary is-medium has-text-centered">
         <div class="hero-body">
-            <h1 class="title">Bienvenue sur notre site d'achat en ligne</h1>
-            <p class="subtitle">Découvrez nos produits et nos services.</p>
-        </div>
+        <?php if (!$isConnected): ?>
+            <section class="section">
+                <h1 class="title">Bienvenue sur notre site</h1>
+                <p class="content">Découvrez des programmes de musculation personnalisés et des recettes adaptées à vos besoins !</p>
+                <a href="inscription.php" class="button is-primary">Inscription</a>
+                <a href="connexion.php" class="button is-link">Connexion</a>
+            </section>
+        <?php else: ?>
+            <section class="section">
+                <h1 class="title">Bienvenue <?= $_SESSION['nom'] ?? 'Utilisateur'; ?> !</h1>
+                <div class="buttons">
+                    <a href="programmes_personnalises.php" class="button is-primary">Programmes personnalisés</a>
+                    <a href="recettes.php" class="button is-link">Recettes</a>
+                    <a href="avis.php" class="button is-info">Avis</a>
+                </div>
+            </section>
+        <?php endif; ?>
     </section>
 
     <!-- Section Carousel -->
@@ -52,42 +69,9 @@ include '../config/db.php'; // Remonte d'un niveau puis va dans "config/"
             <p>Contenu de la popup ici.</p>
         </div>
     </div>
-</main>
+       
+    </main>
 
-<?php 
-include '../includes/footer.php'; 
-?>
-<script>
-    // Gestion du carousel
-const slides = document.querySelectorAll('.carousel .slide');
-let currentIndex = 0;
-
-function showSlide(index) {
-    slides.forEach((slide, i) => {
-        slide.classList.remove('active');
-        if (i === index) slide.classList.add('active');
-    });
-}
-
-setInterval(() => {
-    currentIndex = (currentIndex + 1) % slides.length;
-    showSlide(currentIndex);
-}, 3000); // Changement d'image toutes les 3 secondes
-
-// Gestion de la popup
-const popupTrigger = document.querySelector('.popup-trigger');
-const popup = document.querySelector('.popup');
-const popupClose = document.querySelector('.popup-close');
-
-popupTrigger.addEventListener('click', () => {
-    popup.classList.remove('is-hidden');
-});
-
-popupClose.addEventListener('click', () => {
-    popup.classList.add('is-hidden');
-});
-
-document.addEventListener('click', (e) => {
-    if (e.target === popup) popup.classList.add('is-hidden');
-});
-</script>
+    <?php include '../includes/footer.php'; ?>
+</body>
+</html>
