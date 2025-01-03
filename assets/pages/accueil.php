@@ -31,11 +31,9 @@ $isConnected = isset($_SESSION['user_id']);
         <?php else: ?>
             <section class="section">
                 <h1 class="title">Bienvenue <?= $_SESSION['nom'] ?? 'Utilisateur'; ?> !</h1>
-                <div class="buttons">
                     <a href="programmes_personnalises.php" class="button is-primary">Programmes personnalisés</a>
                     <a href="recettes.php" class="button is-link">Recettes</a>
                     <a href="avis.php" class="button is-info">Avis</a>
-                </div>
             </section>
         <?php endif; ?>
     </section>

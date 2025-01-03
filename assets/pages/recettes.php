@@ -1,43 +1,62 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-if (!isset($_SESSION['user_id'])) {
-    header('Location: connexion.php');
-    exit;
+session_start();
+include '../includes/header.php'; // Inclure le header
+include '../config/db.php'; // Inclure la connexion à la base de données
+
+// Récupérer les recettes depuis la base de données
+try {
+    $stmt = $pdo->prepare("SELECT r.*, u.nom, u.prenom 
+                           FROM recettes r
+                           JOIN utilisateurs u ON r.id_utilisateur = u.id_utilisateur
+                           ORDER BY r.date_creation DESC");
+    $stmt->execute();
+    $recettes = $stmt->fetchAll();
+} catch (PDOException $e) {
+    die("Erreur lors de la récupération des recettes : " . $e->getMessage());
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recettes personnalisées</title>
+    <title>Recettes</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
 </head>
 <body>
-    <?php include '../includes/header.php'; ?>
+<main class="container">
+    <section class="section">
+        <div class="is-flex is-justify-content-space-between is-align-items-center">
+            <h1 class="title">Toutes les Recettes</h1>
+            <!-- Bouton pour ajouter une recette -->
+            <a href="ajouter_recette.php" class="button is-primary">Ajouter une recette</a>
+        </div>
 
-    <main class="container">
-        <section class="section">
-            <h1 class="title">Recettes adaptées à vos objectifs</h1>
-            <p class="content">Découvrez des idées de recettes adaptées :</p>
-            <div class="buttons">
-                <a href="ajouter_recette.php" class="button is-primary">Ajouter une recette</a>
+        <?php if (!empty($recettes)): ?>
+            <div class="columns is-multiline">
+                <?php foreach ($recettes as $recette): ?>
+                    <div class="column is-one-third">
+                        <div class="box">
+                            <h2 class="title is-4"><?= htmlspecialchars($recette['titre']); ?></h2>
+                            <p><strong>Catégorie :</strong> <?= htmlspecialchars($recette['categorie']); ?></p>
+                            <p><strong>Auteur :</strong> <?= htmlspecialchars($recette['prenom'] . ' ' . $recette['nom']); ?></p>
+                            <p><strong>Date :</strong> <?= htmlspecialchars($recette['date_creation']); ?></p>
+                            <?php if (!empty($recette['image'])): ?>
+                                <img src="../../../<?= htmlspecialchars($recette['image']); ?>" alt="<?= htmlspecialchars($recette['titre']); ?>" style="max-width: 100%; height: auto; margin-top: 10px;">
+                            <?php endif; ?>
+                            <p><?= htmlspecialchars(substr($recette['description'], 0, 100)) . '...'; ?></p>
+                            <a href="detail_recette.php?id=<?= $recette['id_recette']; ?>" class="button is-link">Voir la recette</a>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
             </div>
-            <!-- Exemple d'affichage -->
-            <ul>
-                <li>
-                    <h2 class="subtitle">Recette 1 : Poulet et riz</h2>
-                    <p class="content">Catégorie : Prise de masse</p>
-                </li>
-                <li>
-                    <h2 class="subtitle">Recette 2 : Omelette aux légumes</h2>
-                    <p class="content">Catégorie : Maintien</p>
-                </li>
-            </ul>
-        </section>
-    </main>
+        <?php else: ?>
+            <p>Aucune recette trouvée.</p>
+        <?php endif; ?>
+    </section>
+</main>
 
-    <?php include '../includes/footer.php'; ?>
+<?php include '../includes/footer.php'; // Inclure le footer ?>
 </body>
 </html>

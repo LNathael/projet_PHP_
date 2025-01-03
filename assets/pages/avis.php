@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once '../config/db.php';
-
+include '../includes/header.php';
 if (!isset($_SESSION['user_id'])) {
     header('Location: connexion.php');
     exit;
@@ -40,3 +40,5 @@ $produits = $pdo->query("SELECT * FROM produits")->fetchAll();
     <input type="number" name="note" min="1" max="5" placeholder="Note (1-5)" required>
     <button type="submit">Soumettre</button>
 </form>
+
+<?php include '../includes/footer.php';?>
