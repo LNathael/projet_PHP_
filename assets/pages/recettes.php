@@ -45,7 +45,7 @@ try {
                             <?php if (!empty($recette['image'])): ?>
                                 <img src="../../../<?= htmlspecialchars($recette['image']); ?>" alt="<?= htmlspecialchars($recette['titre']); ?>" style="max-width: 100%; height: auto; margin-top: 10px;">
                             <?php endif; ?>
-                            <p><?= htmlspecialchars(substr($recette['description'], 0, 100)) . '...'; ?></p>
+                            <p><?= htmlspecialchars(substr($recette['description'], 0, 200)) . '...'; ?></p>
                             <a href="detail_recette.php?id=<?= $recette['id_recette']; ?>" class="button is-link">Voir la recette</a>
                         </div>
                     </div>
@@ -55,6 +55,29 @@ try {
             <p>Aucune recette trouvée.</p>
         <?php endif; ?>
     </section>
+    <?php
+// Récupérer les avis pour une recette spécifique
+$recette_id = (int)$_GET['id']; // Récupérez l'ID de la recette à afficher
+$stmt = $pdo->prepare("SELECT * FROM avis WHERE type_contenu = 'recette' AND contenu_id = :contenu_id ORDER BY date_avis DESC");
+$stmt->execute(['contenu_id' => $recette_id]);
+$avis = $stmt->fetchAll();
+?>
+
+<section class="section">
+    <h2 class="title is-4">Avis des utilisateurs</h2>
+    <?php if ($avis): ?>
+        <?php foreach ($avis as $avis_item): ?>
+            <div class="box">
+                <p><strong>Note :</strong> <?= htmlspecialchars($avis_item['note']) ?>/5</p>
+                <p><?= nl2br(htmlspecialchars($avis_item['commentaire'])) ?></p>
+                <p><small><em>Publié le <?= htmlspecialchars($avis_item['date_avis']) ?></em></small></p>
+            </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <p>Aucun avis pour cette recette.</p>
+    <?php endif; ?>
+</section>
+
 </main>
 
 <?php include '../includes/footer.php'; // Inclure le footer ?>

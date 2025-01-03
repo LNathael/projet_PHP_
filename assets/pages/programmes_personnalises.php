@@ -7,35 +7,34 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+include '../config/db.php';
+
+$userId = $_SESSION['user_id'];
 $programme = null;
+$message = '';
 
-// Initialiser les variables pour éviter les avertissements
-$objectif = '';
-$frequence = 0;
-$niveau = '';
-$preference = '';
-
+// Récupérer tous les programmes créés par l'utilisateur
 try {
-    $pdo = new PDO('mysql:host=127.0.0.1;dbname=projet_php;charset=utf8mb4', 'root', '');
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $stmt = $pdo->prepare("SELECT * FROM user_programs WHERE user_id = :user_id ORDER BY created_at DESC");
+    $stmt->execute(['user_id' => $userId]);
+    $programmes = $stmt->fetchAll();
 } catch (PDOException $e) {
-    die('Erreur de connexion à la base de données : ' . $e->getMessage());
+    die("Erreur lors de la récupération des programmes : " . $e->getMessage());
 }
 
+// Création de programme
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Récupérer les données du formulaire avec une vérification par défaut
     $objectif = $_POST['objectif'] ?? '';
-    $frequence = isset($_POST['frequence']) ? (int) $_POST['frequence'] : 0;
+    $frequence = isset($_POST['frequence']) ? (int)$_POST['frequence'] : 0;
     $niveau = $_POST['niveau'] ?? '';
     $preference = $_POST['preference'] ?? '';
 
-    $programme = [];
-
-    // Vérification si l'objectif, la fréquence et le niveau sont définis avant de continuer
     if (empty($objectif) || empty($niveau)) {
-        echo "Veuillez remplir tous les champs requis.";
-        exit;
+        $message = "Veuillez remplir tous les champs requis.";
+    } else {
+        $programme = [];
     }
+
 
 
 // Lister les programmes selon l'objectif, la fréquence et le niveau
@@ -141,12 +140,7 @@ if ($objectif === 'perte de poids') {
         ];
     }
 }
-    
-    
-        } else {
-            $programme = ["Programme générique adapté à vos besoins."];
-        }
-
+}
    // Ajustement selon la fréquence
     if ($frequence > 0 && $frequence < count($programme)) {
         $programme = array_slice($programme, 0, $frequence);
@@ -184,73 +178,69 @@ if ($objectif === 'perte de poids') {
     <?php include '../includes/header.php'; ?>
 
     <main class="container">
-        <section class="section">
-            <h1 class="title">Vos programmes personnalisés</h1>
-            <p class="content">Remplissez le formulaire pour obtenir un programme adapté :</p>
+    <section class="section">
+        <h1 class="title">Créer votre Programme Personnalisé</h1>
+        <p class="subtitle">Complétez le formulaire pour recevoir un programme adapté à vos besoins.</p>
 
-            <!-- Formulaire enrichi -->
-            <form method="POST" action="">
-                <div class="field">
-                    <label class="label">Votre objectif</label>
-                    <div class="control">
-                        <select name="objectif" class="input" required>
-                            <option value="">-- Sélectionnez --</option>
-                            <option value="perte de poids" <?= $objectif == 'perte de poids' ? 'selected' : '' ?>>Perte de poids</option>
-                            <option value="gain de masse" <?= $objectif == 'gain de masse' ? 'selected' : '' ?>>Gain de masse</option>
-                            <option value="tonification" <?= $objectif == 'tonification' ? 'selected' : '' ?>>Tonification</option>
-                            <option value="amélioration cardio" <?= $objectif == 'amélioration cardio' ? 'selected' : '' ?>>Amélioration cardio</option>
-                            <option value="amélioration cardio" <?= $objectif == 'powerlifting' ? 'selected' : '' ?>>powerlifting</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label class="label">Fréquence d'entraînement (jours/semaine)</label>
-                    <div class="control">
-                        <input type="number" name="frequence" class="input" min="1" max="7" placeholder="1 à 7" value="<?= $frequence ?>" required>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label class="label">Votre niveau</label>
-                    <div class="control">
-                        <select name="niveau" class="input" required>
-                            <option value="">-- Sélectionnez --</option>
-                            <option value="débutant" <?= $niveau == 'débutant' ? 'selected' : '' ?>>Débutant</option>
-                            <option value="intermédiaire" <?= $niveau == 'intermédiaire' ? 'selected' : '' ?>>Intermédiaire</option>
-                            <option value="avancé" <?= $niveau == 'avancé' ? 'selected' : '' ?>>Avancé</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label class="label">Préférences d'exercices</label>
-                    <div class="control">
-                        <select name="preference" class="input">
-                            <option value="">-- Pas de préférence --</option>
-                            <option value="exercices au poids du corps" <?= $preference == 'exercices au poids du corps' ? 'selected' : '' ?>>Exercices au poids du corps</option>
-                            <option value="entraînement avec machines" <?= $preference == 'entraînement avec machines' ? 'selected' : '' ?>>Entraînement avec machines</option>
-                            <option value="exercices en extérieur" <?= $preference == 'exercices en extérieur' ? 'selected' : '' ?>>Exercices en extérieur</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="control">
-                    <button type="submit" class="button is-primary">Obtenir mon programme</button>
-                </div>
-            </form>
-        </section>
-
-        <?php if ($programme): ?>
-            <section class="section">
-                <h2 class="title is-4">Votre programme personnalisé</h2>
-                <ul>
-                    <?php foreach ($programme as $item): ?>
-                        <li><?= htmlspecialchars($item) ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            </section>
+        <?php if (!empty($message)): ?>
+            <div class="notification is-danger"><?= htmlspecialchars($message) ?></div>
         <?php endif; ?>
+
+        <form method="POST" action="">
+            <div class="field">
+                <label class="label">Votre objectif</label>
+                <div class="control">
+                    <select name="objectif" class="input" required>
+                        <option value="">-- Sélectionnez --</option>
+                        <option value="perte de poids" <?= $objectif === 'perte de poids' ? 'selected' : '' ?>>Perte de poids</option>
+                        <option value="gain de masse" <?= $objectif === 'gain de masse' ? 'selected' : '' ?>>Gain de masse</option>
+                        <option value="tonification" <?= $objectif === 'tonification' ? 'selected' : '' ?>>Tonification</option>
+                        <option value="amélioration cardio" <?= $objectif === 'amélioration cardio' ? 'selected' : '' ?>>Amélioration cardio</option>
+                        <option value="powerlifting" <?= $objectif === 'powerlifting' ? 'selected' : '' ?>>Powerlifting</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Fréquence (jours/semaine)</label>
+                <div class="control">
+                    <input type="number" name="frequence" class="input" min="1" max="7" value="<?= $frequence ?>" required>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Niveau</label>
+                <div class="control">
+                    <select name="niveau" class="input" required>
+                        <option value="">-- Sélectionnez --</option>
+                        <option value="débutant" <?= $niveau === 'débutant' ? 'selected' : '' ?>>Débutant</option>
+                        <option value="intermédiaire" <?= $niveau === 'intermédiaire' ? 'selected' : '' ?>>Intermédiaire</option>
+                        <option value="avancé" <?= $niveau === 'avancé' ? 'selected' : '' ?>>Avancé</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="control">
+                <button type="submit" class="button is-primary">Obtenir mon programme</button>
+            </div>
+        </form>
+    </section>
+    <section class="section">
+        <h1 class="title">Vos Programmes</h1>
+        <?php if ($programmes): ?>
+            <?php foreach ($programmes as $programme): ?>
+                <?php if (!isset($programme['id_programme'])) continue; ?>
+                <div class="box">
+                    <h2 class="title is-4"><?= htmlspecialchars($programme['objectif']); ?> - <?= htmlspecialchars($programme['niveau']); ?></h2>
+                    <p><strong>Fréquence :</strong> <?= htmlspecialchars($programme['frequence']); ?> jours/semaine</p>
+                    <pre><?= htmlspecialchars($programme['programme']); ?></pre>
+                    <a href="detail_programme.php?id=<?= $programme['id_programme']; ?>" class="button is-link">Voir / Modifier</a>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>Vous n'avez pas encore de programme enregistré.</p>
+        <?php endif; ?>
+    </section>
     </main>
 
     <?php include '../includes/footer.php'; ?>
