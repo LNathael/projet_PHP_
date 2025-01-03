@@ -42,6 +42,12 @@ try {
         <p><strong>Auteur :</strong> <?= htmlspecialchars($recette['prenom'] . ' ' . $recette['nom']); ?></p>
         <p><strong>Date :</strong> <?= htmlspecialchars($recette['date_creation']); ?></p>
         <hr>
+        <h2 class="title is-5">Image</h2>
+      <!-- Affichage de l'image -->
+        <?php if (!empty($recette['image'])): ?>
+                                <img src="../../../<?= htmlspecialchars($recette['image']); ?>" alt="<?= htmlspecialchars($recette['titre']); ?>" style="max-width: 100%; height: auto; margin-top: 10px;">
+        <?php endif; ?>
+
         <h2 class="title is-5">Description</h2>
         <p><?= htmlspecialchars($recette['description']); ?></p>
         <h2 class="title is-5">Ingrédients</h2>
