@@ -22,6 +22,18 @@ try {
     if (!$recette) {
         die('Recette introuvable.');
     }
+    // Récupérer les avis pour une recette spécifique
+    $stmt_avis = $pdo->prepare("
+    SELECT a.*, u.nom, u.prenom 
+    FROM avis a
+    JOIN utilisateurs u ON a.id_utilisateur = u.id_utilisateur
+    WHERE a.type_contenu = 'recette' AND a.contenu_id = :id
+    ORDER BY a.date_avis DESC
+    ");
+    $stmt_avis->execute(['id' => $id_recette]);
+    $avis = $stmt_avis->fetchAll(PDO::FETCH_ASSOC);
+
+
 } catch (PDOException $e) {
     die("Erreur lors de la récupération de la recette : " . $e->getMessage());
 }
@@ -55,6 +67,24 @@ try {
         <h2 class="title is-5">Étapes</h2>
         <p><?= nl2br(htmlspecialchars($recette['etapes'])); ?></p>
     </section>
+    
+
+    <section class="section"> 
+    <h2 class="title is-4">Avis des utilisateurs</h2>
+    <?php if ($avis): ?>
+        <?php foreach ($avis as $avis_item): ?>
+            <div class="box">
+                <p><strong>Utilisateur :</strong> <?= htmlspecialchars($avis_item['prenom'] . ' ' . $avis_item['nom']) ?></p>
+                <p><strong>Note :</strong> <?= htmlspecialchars($avis_item['note']) ?>/5</p>
+                <p><?= nl2br(htmlspecialchars($avis_item['commentaire'])) ?></p>
+                <p><small><em>Publié le <?= htmlspecialchars($avis_item['date_avis']) ?></em></small></p>
+            </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <p>Aucun avis pour cette recette.</p>
+    <?php endif; ?>
+</section>
+
 </main>
 
 <?php include '../includes/footer.php'; ?>

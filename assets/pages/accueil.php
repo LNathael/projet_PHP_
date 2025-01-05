@@ -3,6 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 $isConnected = isset($_SESSION['user_id']);
+$isAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'administrateur';
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -35,6 +36,12 @@ $isConnected = isset($_SESSION['user_id']);
                     <a href="recettes.php" class="button is-link">Recettes</a>
                     <a href="avis.php" class="button is-info">Avis</a>
             </section>
+            <?php if ($isAdmin): ?>
+                        <section class="section">
+                            <h2 class="title is-4">Espace Administrateur</h2>
+                            <a href="gestion_admin.php" class="button is-danger">Gestion Admin</a>
+                        </section>
+                <?php endif; ?>
         <?php endif; ?>
     </section>
 
@@ -53,12 +60,10 @@ $isConnected = isset($_SESSION['user_id']);
             </div>
         </div>
     </section>
-
-    <!-- Bouton pour déclencher la popup -->
-    <div class="has-text-centered">
-        <button class="button is-primary popup-trigger">Afficher la popup</button>
-    </div>
-
+  <!-- Bouton pour déclencher la popup -->
+  <div class="has-text-centered">
+            <button class="button is-primary popup-trigger">Afficher la popup</button>
+        </div>
     <!-- Section Popup -->
     <div class="popup is-hidden">
         <div class="popup-content box">

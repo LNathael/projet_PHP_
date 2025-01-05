@@ -26,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['user_id'] = $utilisateur['id_utilisateur'];
                 $_SESSION['email'] = $utilisateur['email'];
                 $_SESSION['role'] = $utilisateur['role']; // Gestion des rôles
+                
 
                 header("Location: accueil.php");
                 exit();
