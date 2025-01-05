@@ -51,9 +51,10 @@ try {
     </section>
     <?php
 // Récupérer les avis pour un programme spécifique
-$programme_id = (int)$_GET['id_programme']; // Récupérez l'ID du programme à afficher
-$stmt = $pdo->prepare("SELECT * FROM avis WHERE type_contenu = 'programme' AND contenu_id = :contenu_id ORDER BY date_avis DESC");
-$stmt->execute(['contenu_id' => $programme_id]);
+$stmt = $pdo->prepare("SELECT * FROM user_programs WHERE user_id = :user_id ORDER BY created_at DESC");
+$stmt->execute(['user_id' => $userId]);
+$programmes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 $avis = $stmt->fetchAll();
 ?>
 
