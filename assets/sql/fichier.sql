@@ -27,15 +27,20 @@ CREATE TABLE IF NOT EXISTS `avis` (
   `commentaire` text NOT NULL,
   `note` int DEFAULT NULL,
   `date_avis` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `type_contenu` enum('recette','programme') NOT NULL,
+  `contenu_id` int NOT NULL,
   PRIMARY KEY (`id_avis`),
   KEY `id_produit` (`id_produit`),
   KEY `id_utilisateur` (`id_utilisateur`),
   CONSTRAINT `avis_ibfk_1` FOREIGN KEY (`id_produit`) REFERENCES `produits` (`id_produit`) ON DELETE CASCADE,
   CONSTRAINT `avis_ibfk_2` FOREIGN KEY (`id_utilisateur`) REFERENCES `utilisateurs` (`id_utilisateur`) ON DELETE CASCADE,
   CONSTRAINT `avis_chk_1` CHECK ((`note` between 1 and 5))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage des données de la table projet_php.avis : ~0 rows (environ)
+-- Listage des données de la table projet_php.avis : ~1 rows (environ)
+INSERT INTO `avis` (`id_avis`, `id_produit`, `id_utilisateur`, `commentaire`, `note`, `date_avis`, `type_contenu`, `contenu_id`) VALUES
+	(1, 1, 2, 'bien', 5, '2025-01-02 22:45:37', 'recette', 0),
+	(2, NULL, 2, 'miam super bonn !!!!!', 5, '2025-01-05 22:57:03', 'recette', 3);
 
 -- Listage de la structure de table projet_php. commandes
 CREATE TABLE IF NOT EXISTS `commandes` (
@@ -94,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `panier` (
   CONSTRAINT `panier_ibfk_2` FOREIGN KEY (`id_produit`) REFERENCES `produits` (`id_produit`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage des données de la table projet_php.panier : ~1 rows (environ)
+-- Listage des données de la table projet_php.panier : ~0 rows (environ)
 INSERT INTO `panier` (`id_panier`, `id_utilisateur`, `id_produit`, `quantite`) VALUES
 	(1, 1, 1, 2);
 
@@ -109,7 +114,7 @@ CREATE TABLE IF NOT EXISTS `produits` (
   PRIMARY KEY (`id_produit`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage des données de la table projet_php.produits : ~1 rows (environ)
+-- Listage des données de la table projet_php.produits : ~0 rows (environ)
 INSERT INTO `produits` (`id_produit`, `nom_produit`, `description`, `prix`, `quantite_disponible`, `libelle`) VALUES
 	(1, 'Programme Musculation Débutant', 'Programme idéal pour débuter.', 29.99, 50, 'Prise de masse');
 
@@ -133,6 +138,26 @@ CREATE TABLE IF NOT EXISTS `recettes` (
 INSERT INTO `recettes` (`id_recette`, `titre`, `description`, `categorie`, `ingredients`, `etapes`, `id_utilisateur`, `date_creation`, `image`) VALUES
 	(3, 'omelette', 'casser les oeuf dans un bol \r\net mettre dans un poêle avec du lait', 'Prise de masse', 'lait\r\noeuf', '2', 2, '2025-01-02 23:22:42', 'uploads/recettes/recette_677711b23dfc5.jpg');
 
+-- Listage de la structure de table projet_php. user_programs
+CREATE TABLE IF NOT EXISTS `user_programs` (
+  `id_programme` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `objectif` varchar(255) NOT NULL,
+  `frequence` int NOT NULL,
+  `niveau` varchar(50) NOT NULL,
+  `programme` text NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_programme`),
+  KEY `fk_user_programs_user` (`user_id`),
+  CONSTRAINT `fk_user_programs_user` FOREIGN KEY (`user_id`) REFERENCES `utilisateurs` (`id_utilisateur`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Listage des données de la table projet_php.user_programs : ~2 rows (environ)
+INSERT INTO `user_programs` (`id_programme`, `user_id`, `objectif`, `frequence`, `niveau`, `programme`, `created_at`, `updated_at`) VALUES
+	(1, 2, 'perte de poids', 4, 'débutant', 'Lundi : Cardio léger (marche rapide, vélo 30 min)\r\nMercredi : Renforcement musculaire avec poids légers\r\nVendredi : Yoga ou stretching', '2025-01-05 19:16:33', '2025-01-05 19:16:41'),
+	(2, 2, 'powerlifting', 4, 'débutant', 'Jour 1 : Squat 3x5, Leg Press 3x10, Crunchs 3x12\nJour 2 : Développé couché 3x5, Pompes 3x10, Planche 3x30s\nJour 3 : Soulevé de terre 3x5, Tractions 3x5, Extensions lombaires 3x10', '2025-01-05 19:16:37', '2025-01-05 19:16:37');
+
 -- Listage de la structure de table projet_php. utilisateurs
 CREATE TABLE IF NOT EXISTS `utilisateurs` (
   `id_utilisateur` int NOT NULL AUTO_INCREMENT,
@@ -152,8 +177,8 @@ CREATE TABLE IF NOT EXISTS `utilisateurs` (
 INSERT INTO `utilisateurs` (`id_utilisateur`, `nom`, `prenom`, `email`, `mot_de_passe`, `role`, `date_naissance`, `sexe`, `date_creation`) VALUES
 	(1, 'Le Bihan', 'Nathaël', 'xarunax69@gmail.com', '$2y$10$j3VjdNMrOq4gyFpKUDs9MOOLRbT4oCohOvzD.TFOhgz17joIST1Oy', 'utilisateur', '2005-10-12', 'Homme', '2024-12-11 20:54:21'),
 	(2, 'LE BIHAN', 'Nathaël', 'nathael.lebihan12102005@gmail.com', '$2y$10$D03sL3VkP9kD.LRdaljwu.KpvbtU37P7.4yAwkRWL9JbLLrHX8ONi', 'utilisateur', '2005-10-12', 'Homme', '2024-12-20 11:39:16'),
-	(3, 'Admin', 'Principal', 'admin@site.com', 'mot_de_passe_haché', 'administrateur', NULL, NULL, '2024-12-27 12:39:01'),
-	(4, 'Jean', 'Dupont', 'jean.dupont@example.com', 'mot_de_passe_haché', 'utilisateur', NULL, NULL, '2024-12-27 12:39:16');
+	(3, 'Admin', 'Principal', 'admin@site.com', 'mot_de_passe_hache', 'administrateur', NULL, NULL, '2024-12-27 12:39:01'),
+	(4, 'Jean', 'Dupont', 'jean.dupont@example.com', 'mot_de_passe_hache', 'utilisateur', NULL, NULL, '2024-12-27 12:39:16');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
