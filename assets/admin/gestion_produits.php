@@ -1,4 +1,7 @@
+
 <?php
+// mettre un lien de cette page dans la page gestion administrateur ( cela crée un produit)
+
 session_start();
 require_once '../../config/db.php';
 
