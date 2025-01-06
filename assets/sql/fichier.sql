@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `avis` (
   CONSTRAINT `avis_chk_1` CHECK ((`note` between 1 and 5))
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage des données de la table projet_php.avis : ~1 rows (environ)
+-- Listage des données de la table projet_php.avis : ~2 rows (environ)
 INSERT INTO `avis` (`id_avis`, `id_produit`, `id_utilisateur`, `commentaire`, `note`, `date_avis`, `type_contenu`, `contenu_id`) VALUES
 	(1, 1, 2, 'bien', 5, '2025-01-02 22:45:37', 'recette', 0),
 	(2, NULL, 2, 'miam super bonn !!!!!', 5, '2025-01-05 22:57:03', 'recette', 3);
@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `panier` (
   CONSTRAINT `panier_ibfk_2` FOREIGN KEY (`id_produit`) REFERENCES `produits` (`id_produit`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage des données de la table projet_php.panier : ~0 rows (environ)
+-- Listage des données de la table projet_php.panier : ~1 rows (environ)
 INSERT INTO `panier` (`id_panier`, `id_utilisateur`, `id_produit`, `quantite`) VALUES
 	(1, 1, 1, 2);
 
@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS `produits` (
   PRIMARY KEY (`id_produit`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage des données de la table projet_php.produits : ~0 rows (environ)
+-- Listage des données de la table projet_php.produits : ~1 rows (environ)
 INSERT INTO `produits` (`id_produit`, `nom_produit`, `description`, `prix`, `quantite_disponible`, `libelle`) VALUES
 	(1, 'Programme Musculation Débutant', 'Programme idéal pour débuter.', 29.99, 50, 'Prise de masse');
 
