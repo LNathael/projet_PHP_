@@ -2,34 +2,61 @@
 session_start();
 require_once '../config/db.php';
 
-// Vérifier si l'utilisateur est un administrateur
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'administrateur') {
+if (!isset($_SESSION['user_id'])) {
     header('Location: connexion.php');
     exit;
 }
 
+if ($_SESSION['role'] !== 'administrateur' && $_SESSION['role'] !== 'super_administrateur') {
+    header('Location: erreur_403.php'); // Page interdite
+    exit;
+}
+
+$isSuperAdmin = ($_SESSION['role'] === 'super_administrateur');
+
 // Supprimer un utilisateur
-if (isset($_POST['delete_user'])) {
+if ($isSuperAdmin && isset($_POST['delete_user'])) {
     $id_utilisateur = (int)$_POST['id_utilisateur'];
     $stmt = $pdo->prepare("DELETE FROM utilisateurs WHERE id_utilisateur = :id");
     $stmt->execute(['id' => $id_utilisateur]);
 }
 
 // Modifier un utilisateur
-if (isset($_POST['edit_user'])) {
+if ($isSuperAdmin && isset($_POST['edit_user'])) {
     $id_utilisateur = (int)$_POST['id_utilisateur'];
     $nom = htmlspecialchars($_POST['nom']);
     $prenom = htmlspecialchars($_POST['prenom']);
     $email = htmlspecialchars($_POST['email']);
     $role = $_POST['role'];
 
-    $stmt = $pdo->prepare("UPDATE utilisateurs SET nom = :nom, prenom = :prenom, email = :email, role = :role WHERE id_utilisateur = :id");
+    if ($role !== 'super_administrateur' || $isSuperAdmin) { // Empêche la modification du rôle super administrateur
+        $stmt = $pdo->prepare("UPDATE utilisateurs SET nom = :nom, prenom = :prenom, email = :email, role = :role WHERE id_utilisateur = :id");
+        $stmt->execute([
+            'nom' => $nom,
+            'prenom' => $prenom,
+            'email' => $email,
+            'role' => $role,
+            'id' => $id_utilisateur,
+        ]);
+    }
+}
+
+
+// Création d'un administrateur par le super administrateur
+if ($isSuperAdmin && isset($_POST['create_admin'])) {
+    $nom = htmlspecialchars($_POST['nom']);
+    $prenom = htmlspecialchars($_POST['prenom']);
+    $email = htmlspecialchars($_POST['email']);
+    $mot_de_passe = password_hash($_POST['mot_de_passe'], PASSWORD_DEFAULT);
+    $role = 'administrateur';
+
+    $stmt = $pdo->prepare("INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe, role) VALUES (:nom, :prenom, :email, :mot_de_passe, :role)");
     $stmt->execute([
         'nom' => $nom,
         'prenom' => $prenom,
         'email' => $email,
-        'role' => $role,
-        'id' => $id_utilisateur,
+        'mot_de_passe' => $mot_de_passe,
+        'role' => $role
     ]);
 }
 
@@ -102,7 +129,32 @@ $recettes = $pdo->query("SELECT r.*, u.nom AS nom_utilisateur, u.prenom AS preno
 
 <main class="container">
     <h1 class="title mt-5">Page de Gestion Administrateur</h1>
-
+    <?php if ($isSuperAdmin): ?>
+        <section class="section">
+            <h2 class="title is-4">Créer un administrateur</h2>
+            <form method="POST">
+                <div class="field">
+                    <label class="label">Nom</label>
+                    <input class="input" type="text" name="nom" placeholder="Nom" required>
+                </div>
+                <div class="field">
+                    <label class="label">Prénom</label>
+                    <input class="input" type="text" name="prenom" placeholder="Prénom" required>
+                </div>
+                <div class="field">
+                    <label class="label">Email</label>
+                    <input class="input" type="email" name="email" placeholder="Email" required>
+                </div>
+                <div class="field">
+                    <label class="label">Mot de passe</label>
+                    <input class="input" type="password" name="mot_de_passe" placeholder="Mot de passe" required>
+                </div>
+                <div class="control">
+                    <button type="submit" name="create_admin" class="button is-primary">Créer un administrateur</button>
+                </div>
+            </form>
+        </section>
+    <?php endif; ?>
     <!-- Section Gestion Utilisateurs -->
     <section class="section">
         <h2 class="title is-4">Gestion des utilisateurs</h2>

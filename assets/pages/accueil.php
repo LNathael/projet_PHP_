@@ -4,6 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 $isConnected = isset($_SESSION['user_id']);
 $isAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'administrateur';
+$isSuperAdmin = ($_SESSION['role']) && $_SESSION['role'] === 'super_administrateur';
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -36,11 +37,11 @@ $isAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'administrateur';
                     <a href="recettes.php" class="button is-link">Recettes</a>
                     <a href="avis.php" class="button is-info">Avis</a>
             </section>
-            <?php if ($isAdmin): ?>
-                        <section class="section">
-                            <h2 class="title is-4">Espace Administrateur</h2>
-                            <a href="../admin/gestion_admin.php" class="button is-danger">Gestion Admin</a>
-                        </section>
+            <?php if ($isAdmin || $isSuperAdmin): ?>
+                <section class="section">
+                    <h2 class="title is-4">Espace Administrateur</h2>
+                    <a href="/assets/admin/gestion_admin.php" class="button is-danger">Gestion Admin</a>
+                    </section>
             <?php endif; ?>
         <?php endif; ?>
     </section>
