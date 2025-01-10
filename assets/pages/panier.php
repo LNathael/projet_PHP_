@@ -3,13 +3,18 @@ session_start();
 require_once '../config/db.php'; // Connexion à la base de données
 
 // Vérifier si l'utilisateur est connecté
-// revoir ce problème
 if (!isset($_SESSION['id_utilisateur'])) {
     header('Location: connexion.php');
     exit;
 }
 
 $id_utilisateur = $_SESSION['id_utilisateur'];
+
+// Vérifier si $id_utilisateur est défini
+if (empty($id_utilisateur)) {
+    header('Location: connexion.php');
+    exit;
+}
 
 // Actions sur le panier
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

@@ -23,7 +23,15 @@ $produits = $stmt->fetchAll();
             <?php foreach ($produits as $produit): ?>
                 <div class="column is-one-third">
                     <div class="card">
-                        <div class="card-content">
+                    <?php if (!empty($produit['image'])): ?>
+                        <div class="card-image">
+                            <figure class="image is-4by3">
+                                <img src="../uploard<?= htmlspecialchars($produit['image']); ?>" alt="<?= htmlspecialchars($produit['nom_produit']); ?>">
+                            </figure>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <div class="card-content">
                             <h2 class="title is-5"><?= htmlspecialchars($produit['nom_produit']); ?></h2>
                             <p><?= nl2br(htmlspecialchars($produit['description'])); ?></p>
                             <p class="is-size-6 has-text-weight-bold">Prix : <?= number_format($produit['prix'], 2, ',', ' '); ?> €</p>

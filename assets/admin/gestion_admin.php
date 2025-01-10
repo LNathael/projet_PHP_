@@ -14,6 +14,8 @@ if ($_SESSION['role'] !== 'administrateur' && $_SESSION['role'] !== 'super_admin
 
 $isSuperAdmin = ($_SESSION['role'] === 'super_administrateur');
 
+
+
 // Supprimer un utilisateur
 if ($isSuperAdmin && isset($_POST['delete_user'])) {
     $id_utilisateur = (int)$_POST['id_utilisateur'];
@@ -113,6 +115,47 @@ $recettes = $pdo->query("SELECT r.*, u.nom AS nom_utilisateur, u.prenom AS preno
                          FROM recettes r 
                          JOIN utilisateurs u ON r.id_utilisateur = u.id_utilisateur 
                          ORDER BY r.date_creation DESC")->fetchAll(PDO::FETCH_ASSOC);
+
+/// Ajouter un produit
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_product'])) {
+    $nom = htmlspecialchars($_POST['nom']);
+    $description = htmlspecialchars($_POST['description']);
+    $prix = floatval($_POST['prix']);
+    $quantite = intval($_POST['quantite']);
+    $imagePath = null;
+
+    // Gérer l'upload de l'image
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+    $uploadDir = __DIR__ . '/../../uploads/produits/'; // Chemin absolu
+    $imageName = uniqid('produit_') . '.' . pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+    $imagePath = $uploadDir . $imageName;
+
+    // Vérifiez si le dossier existe, sinon créez-le
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0755, true); // Crée le dossier avec les permissions adéquates
+    }
+
+    // Déplacer l'image uploadée
+    if (!move_uploaded_file($_FILES['image']['tmp_name'], $imagePath)) {
+        die("Erreur lors du déplacement du fichier. Vérifiez les permissions du dossier : $uploadDir");
+    }
+
+    // Stockez le chemin relatif pour la base de données
+    $imagePath = 'uploads/produits/' . $imageName;
+}
+
+    // Insérer les données dans la base
+    if ($imagePath) {
+        $stmt = $pdo->prepare("INSERT INTO produits (nom_produit, description, prix, quantite_disponible, image) VALUES (?, ?, ?, ?, ?)");
+        $stmt->execute([$nom, $description, $prix, $quantite, $imagePath]);
+        $message = "Produit ajouté avec succès.";
+    }
+}
+
+
+// Récupérer tous les produits pour les afficher dans la gestion
+$produits = $pdo->query("SELECT * FROM produits ORDER BY nom_produit ASC")->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <!DOCTYPE html>
@@ -127,8 +170,93 @@ $recettes = $pdo->query("SELECT r.*, u.nom AS nom_utilisateur, u.prenom AS preno
 <?php include '../includes/header.php'; ?>
 
 
+
+
+
 <main class="container">
+    <h1 class="title">Gestion des Produits</h1>
+
+    <!-- Afficher un message de confirmation -->
+    <?php if (!empty($message)): ?>
+        <div class="notification is-success">
+            <?= htmlspecialchars($message); ?>
+        </div>
+    <?php endif; ?>
+
+    <!-- Formulaire d'ajout de produit -->
+    <section>
+        <h2 class="title is-4">Ajouter un produit</h2>
+        <form method="POST" enctype="multipart/form-data">
+        <div class="field">
+            <label class="label">Nom du produit</label>
+            <div class="control">
+                <input class="input" type="text" name="nom" placeholder="Nom du produit" required>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Description</label>
+            <div class="control">
+                <textarea class="textarea" name="description" placeholder="Description du produit" required></textarea>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Prix</label>
+            <div class="control">
+                <input class="input" type="number" step="0.01" name="prix" placeholder="Prix en €" required>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Quantité disponible</label>
+            <div class="control">
+                <input class="input" type="number" name="quantite" placeholder="Quantité disponible" required>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Image</label>
+            <div class="control">
+                <input class="input" type="file" name="image" accept="image/*" required>
+            </div>
+        </div>
+        <div class="control">
+            <button class="button is-primary" type="submit" name="add_product">Ajouter</button>
+        </div>
+    </form>
+
+    </section>
+
+    <!-- Liste des produits -->
+    <section class="mt-5">
+        <h2 class="title is-4">Liste des produits</h2>
+        <table class="table is-striped is-fullwidth">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Nom</th>
+                    <th>Description</th>
+                    <th>Prix</th>
+                    <th>Quantité</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($produits as $produit): ?>
+                    <tr>
+                        <td>
+                            <?php if (!empty($produit['image'])): ?>
+                                <img src="../<?= htmlspecialchars($produit['image']); ?>" alt="<?= htmlspecialchars($produit['nom_produit']); ?>" style="max-width: 100px;">
+                            <?php endif; ?>
+                        </td>
+                        <td><?= htmlspecialchars($produit['nom_produit']); ?></td>
+                        <td><?= htmlspecialchars(substr($produit['description'], 0, 50)) . '...'; ?></td>
+                        <td><?= number_format($produit['prix'], 2, ',', ' '); ?> €</td>
+                        <td><?= htmlspecialchars($produit['quantite_disponible']); ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+
+    </section>
     <h1 class="title mt-5">Page de Gestion Administrateur</h1>
+    <!-- Section Gestion Produits -->
     <?php if ($isSuperAdmin): ?>
         <section class="section">
             <h2 class="title is-4">Créer un administrateur</h2>
