@@ -719,18 +719,23 @@ function openEditModalProduit(produit) {
                             </div>
                         </div>
 
+                <!-- Champ Image -->
                         <div class="field">
-                            <label class="label">Image actuelle</label>
+                            <label class="label">Image du produit</label>
                             <div class="control">
-                                ${produit.image ? `<img src="../../${produit.image}" alt="${produit.nom_produit}" style="max-width: 100px;">` : '<p>Aucune image</p>'}
+                                <input class="input" type="file" name="image" accept="image/*" required>
                             </div>
                         </div>
+
+
                         <div class="field">
                             <label class="label">Nouvelle Image (facultatif)</label>
                             <div class="control">
                                 <input class="input" type="file" name="image" accept="image/*">
                             </div>
                         </div>
+
+
                     </section>
                     <footer class="modal-card-foot">
                         <button type="submit" name="edit_product" class="button is-success">Modifier</button>
