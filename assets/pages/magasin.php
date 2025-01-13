@@ -26,7 +26,7 @@ $produits = $stmt->fetchAll();
                     <?php if (!empty($produit['image'])): ?>
                         <div class="card-image">
                             <figure class="image is-4by3">
-                                <img src="../uploard<?= htmlspecialchars($produit['image']); ?>" alt="<?= htmlspecialchars($produit['nom_produit']); ?>">
+                                <img src="/../uploads<?= htmlspecialchars($produit['image']); ?>" alt="<?= htmlspecialchars($produit['nom_produit']); ?>">
                             </figure>
                         </div>
                     <?php endif; ?>
