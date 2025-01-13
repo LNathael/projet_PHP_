@@ -116,46 +116,151 @@ $recettes = $pdo->query("SELECT r.*, u.nom AS nom_utilisateur, u.prenom AS preno
                          JOIN utilisateurs u ON r.id_utilisateur = u.id_utilisateur 
                          ORDER BY r.date_creation DESC")->fetchAll(PDO::FETCH_ASSOC);
 
-/// Ajouter un produit
+// Ajouter un produit
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_product'])) {
+    $nom = htmlspecialchars($_POST['nom'] ?? '');
+    $description = htmlspecialchars($_POST['description'] ?? '');
+    $prix = floatval($_POST['prix'] ?? 0);
+    $quantite = intval($_POST['quantite'] ?? 0);
+    $libelle = htmlspecialchars($_POST['libelle'] ?? ''); // Nouveau champ
+    $imagePath = null;
+
+    // Validation des champs obligatoires
+    if (empty($nom) || empty($description) || $prix <= 0 || $quantite <= 0 || empty($libelle)) {
+        echo "Veuillez remplir tous les champs correctement.";
+    } else {
+        // Gestion de l'image
+        if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+            $uploadDir = __DIR__ . '/../../uploads/produits/';
+            $imageName = uniqid('produit_') . '.' . pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+            if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+            if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadDir . $imageName)) {
+                $imagePath = 'uploads/produits/' . $imageName;
+            }
+        }
+
+        // Insérer le produit dans la base de données
+        $stmt = $pdo->prepare("INSERT INTO produits (nom_produit, description, prix, quantite_disponible, libelle, image) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$nom, $description, $prix, $quantite, $libelle, $imagePath]);
+        echo "Produit ajouté avec succès.";
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit;
+    }
+}
+
+
+// Supprimer un produit
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_product'])) {
+    $id_produit = intval($_POST['id_produit']);
+
+    // Supprimer l'image associée
+    $stmt = $pdo->prepare("SELECT image FROM produits WHERE id_produit = ?");
+    $stmt->execute([$id_produit]);
+    $produit = $stmt->fetch();
+    if ($produit && !empty($produit['image'])) {
+        $imagePath = __DIR__ . '/../../' . $produit['image'];
+        if (file_exists($imagePath)) {
+            unlink($imagePath); // Supprimer le fichier image
+        }
+    }
+
+    // Supprimer le produit de la base de données
+    $stmt = $pdo->prepare("DELETE FROM produits WHERE id_produit = ?");
+    $stmt->execute([$id_produit]);
+    echo "Produit supprimé avec succès.";
+}
+
+// Modifier un produit
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_product'])) {
+    $id_produit = intval($_POST['id_produit']);
+    $nom = htmlspecialchars($_POST['nom'] ?? '');
+    $description = htmlspecialchars($_POST['description'] ?? '');
+    $prix = floatval($_POST['prix'] ?? 0);
+    $quantite = intval($_POST['quantite'] ?? 0);
+    $libelle = htmlspecialchars($_POST['libelle'] ?? ''); // Nouveau champ
+    $imagePath = null;
+
+    // Gestion de l'image
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+        $uploadDir = __DIR__ . '/../../uploads/produits/';
+        $imageName = uniqid('produit_') . '.' . pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+        if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+        if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadDir . $imageName)) {
+            $imagePath = 'uploads/produits/' . $imageName;
+        }
+    }
+
+    // Construction de la requête SQL
+    $sql = "UPDATE produits SET nom_produit = ?, description = ?, prix = ?, quantite_disponible = ?, libelle = ?";
+    $params = [$nom, $description, $prix, $quantite, $libelle];
+
+    if ($imagePath) {
+        $sql .= ", image = ?";
+        $params[] = $imagePath;
+    }
+    $sql .= " WHERE id_produit = ?";
+    $params[] = $id_produit;
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+    echo "Produit modifié avec succès.";
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit;
+}
+
+
+
+
+
+
+
+
+/*
+// Modifier un produit
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_product'])) {
+    $id_produit = intval($_POST['id_produit']);
     $nom = htmlspecialchars($_POST['nom']);
     $description = htmlspecialchars($_POST['description']);
     $prix = floatval($_POST['prix']);
     $quantite = intval($_POST['quantite']);
     $imagePath = null;
 
-    // Gérer l'upload de l'image
+    
+
+    // Gérer l'upload de l'image (si une nouvelle image est uploadée)
     if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-    $uploadDir = __DIR__ . '/../../uploads/produits/'; // Chemin absolu
-    $imageName = uniqid('produit_') . '.' . pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-    $imagePath = $uploadDir . $imageName;
+        $uploadDir = __DIR__ . '/../../uploads/produits/';
+        $imageName = uniqid('produit_') . '.' . pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+        $imagePath = $uploadDir . $imageName;
 
-    // Vérifiez si le dossier existe, sinon créez-le
-    if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0755, true); // Crée le dossier avec les permissions adéquates
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+
+        if (move_uploaded_file($_FILES['image']['tmp_name'], $imagePath)) {
+            $imagePath = 'uploads/produits/' . $imageName;
+
+            // Supprimer l'ancienne image
+            $stmt = $pdo->prepare("SELECT image FROM produits WHERE id_produit = ?");
+            $stmt->execute([$id_produit]);
+            $produit = $stmt->fetch();
+            if ($produit && !empty($produit['image'])) {
+                $oldImagePath = __DIR__ . '/../../' . $produit['image'];
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+            }
+        }
     }
-
-    // Déplacer l'image uploadée
-    if (!move_uploaded_file($_FILES['image']['tmp_name'], $imagePath)) {
-        die("Erreur lors du déplacement du fichier. Vérifiez les permissions du dossier : $uploadDir");
-    }
-
-    // Stockez le chemin relatif pour la base de données
-    $imagePath = 'uploads/produits/' . $imageName;
+    // Mise à jour du produit
+    $stmt = $pdo->prepare("UPDATE produits SET nom_produit = ?, description = ?, prix = ?, quantite_disponible = ?, image = COALESCE(?, image) WHERE id_produit = ?");
+    $stmt->execute([$nom, $description, $prix, $quantite, $imagePath, $id_produit]);
+    $message = "Produit modifié avec succès.";
 }
+*/
 
-    // Insérer les données dans la base
-    if ($imagePath) {
-        $stmt = $pdo->prepare("INSERT INTO produits (nom_produit, description, prix, quantite_disponible, image) VALUES (?, ?, ?, ?, ?)");
-        $stmt->execute([$nom, $description, $prix, $quantite, $imagePath]);
-        $message = "Produit ajouté avec succès.";
-    }
-}
-
-
-// Récupérer tous les produits pour les afficher dans la gestion
+// Récupérer les produits
 $produits = $pdo->query("SELECT * FROM produits ORDER BY nom_produit ASC")->fetchAll(PDO::FETCH_ASSOC);
-
 ?>
 
 <!DOCTYPE html>
@@ -171,57 +276,72 @@ $produits = $pdo->query("SELECT * FROM produits ORDER BY nom_produit ASC")->fetc
 
 
 
-
-
 <main class="container">
     <h1 class="title">Gestion des Produits</h1>
 
-    <!-- Afficher un message de confirmation -->
+    <!-- Message -->
     <?php if (!empty($message)): ?>
         <div class="notification is-success">
             <?= htmlspecialchars($message); ?>
         </div>
     <?php endif; ?>
 
-    <!-- Formulaire d'ajout de produit -->
+    <!-- Ajouter un produit -->
     <section>
+        <form method="POST" enctype="multipart/form-data" class="box">
         <h2 class="title is-4">Ajouter un produit</h2>
-        <form method="POST" enctype="multipart/form-data">
+
+        <!-- Champ Nom du produit -->
         <div class="field">
             <label class="label">Nom du produit</label>
             <div class="control">
                 <input class="input" type="text" name="nom" placeholder="Nom du produit" required>
             </div>
         </div>
+
+        <div class="field">
+        <label class="label">Libellé</label>
+            <div class="control">
+                <input class="input" type="text" name="libelle" placeholder="Libellé du produit" required>
+            </div>
+        </div>
+        <!-- Champ Description -->
         <div class="field">
             <label class="label">Description</label>
             <div class="control">
                 <textarea class="textarea" name="description" placeholder="Description du produit" required></textarea>
             </div>
         </div>
+
+        <!-- Champ Prix -->
         <div class="field">
             <label class="label">Prix</label>
             <div class="control">
                 <input class="input" type="number" step="0.01" name="prix" placeholder="Prix en €" required>
             </div>
         </div>
+
+        <!-- Champ Quantité -->
         <div class="field">
             <label class="label">Quantité disponible</label>
             <div class="control">
                 <input class="input" type="number" name="quantite" placeholder="Quantité disponible" required>
             </div>
         </div>
+
+        <!-- Champ Image -->
         <div class="field">
-            <label class="label">Image</label>
+            <label class="label">Image du produit</label>
             <div class="control">
                 <input class="input" type="file" name="image" accept="image/*" required>
             </div>
         </div>
+
+        <!-- Bouton Soumettre -->
         <div class="control">
-            <button class="button is-primary" type="submit" name="add_product">Ajouter</button>
+            <button class="button is-primary" type="submit" name="add_product">Ajouter le produit</button>
         </div>
     </form>
-
     </section>
 
     <!-- Liste des produits -->
@@ -232,9 +352,11 @@ $produits = $pdo->query("SELECT * FROM produits ORDER BY nom_produit ASC")->fetc
                 <tr>
                     <th>Image</th>
                     <th>Nom</th>
+                    <th>Libellé</th>
                     <th>Description</th>
                     <th>Prix</th>
                     <th>Quantité</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -242,18 +364,38 @@ $produits = $pdo->query("SELECT * FROM produits ORDER BY nom_produit ASC")->fetc
                     <tr>
                         <td>
                             <?php if (!empty($produit['image'])): ?>
-                                <img src="../<?= htmlspecialchars($produit['image']); ?>" alt="<?= htmlspecialchars($produit['nom_produit']); ?>" style="max-width: 100px;">
+                                <img src="../../<?= htmlspecialchars($produit['image'] ?? ''); ?>" style="max-width: 100px;">
                             <?php endif; ?>
                         </td>
-                        <td><?= htmlspecialchars($produit['nom_produit']); ?></td>
-                        <td><?= htmlspecialchars(substr($produit['description'], 0, 50)) . '...'; ?></td>
-                        <td><?= number_format($produit['prix'], 2, ',', ' '); ?> €</td>
-                        <td><?= htmlspecialchars($produit['quantite_disponible']); ?></td>
+                        <td><?= htmlspecialchars($produit['nom_produit'] ?? ''); ?></td>
+                        <td><?= htmlspecialchars($produit['libelle'] ?? ''); ?></td>
+                        <td><?= htmlspecialchars(substr($produit['description'] ?? '', 0, 50)); ?>...</td>
+                        <td><?= number_format($produit['prix'] ?? 0, 2); ?> €</td>
+                        <td><?= htmlspecialchars($produit['quantite_disponible'] ?? '0'); ?></td>
+                        <td>
+                            <!-- Supprimer -->
+                            <form method="POST" style="display:inline-block;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?');">
+                                <input type="hidden" name="id_produit" value="<?= htmlspecialchars($produit['id_produit'] ?? ''); ?>">
+                                <button type="submit" name="delete_product" class="button is-danger is-small">Supprimer</button>
+                            </form>
+                            <!-- Modifier -->
+                            <button class="button is-link is-small" 
+                                    onclick="openEditModalProduit({
+                                        id: <?= $produit['id_produit']; ?>,
+                                        nom: '<?= addslashes($produit['nom_produit'] ?? ''); ?>',
+                                        libelle: '<?= addslashes($produit['libelle'] ?? ''); ?>',
+                                        description: '<?= addslashes($produit['description'] ?? ''); ?>',
+                                        prix: <?= $produit['prix'] ?? 0; ?>,
+                                        quantite: <?= $produit['quantite_disponible'] ?? 0; ?>
+                                    })">
+                                Modifier
+                            </button>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
-        </table>
 
+        </table>
     </section>
     <h1 class="title mt-5">Page de Gestion Administrateur</h1>
     <!-- Section Gestion Produits -->
@@ -391,7 +533,7 @@ $produits = $pdo->query("SELECT * FROM produits ORDER BY nom_produit ASC")->fetc
 
 <script>
     // Fonction pour afficher le modal de modification des utilisateurs
-function openEditModalUser(user) {
+    function openEditModalUser(user) {
     const modalContent = `
         <div class="modal is-active" id="editUserModal">
             <div class="modal-background"></div>
@@ -427,6 +569,7 @@ function openEditModalUser(user) {
                                 <select class="input" name="role">
                                     <option value="utilisateur" ${user.role === "utilisateur" ? "selected" : ""}>Utilisateur</option>
                                     <option value="administrateur" ${user.role === "administrateur" ? "selected" : ""}>Administrateur</option>
+                                    <option value="super_administrateur" ${user.role === "super_administrateur" ? "selected" : ""}>Super Administrateur</option>
                                 </select>
                             </div>
                         </div>
@@ -441,6 +584,7 @@ function openEditModalUser(user) {
     `;
     document.body.insertAdjacentHTML("beforeend", modalContent);
 }
+
 
 // Fonction pour afficher le modal de modification des avis
 function openEditModalAvis(avis) {
@@ -524,13 +668,89 @@ function openEditModalRecette(recette) {
         </div>
     `;
     document.body.insertAdjacentHTML("beforeend", modalContent);
+
 }
 
-// Fonction pour fermer un modal
+
+// Fonction pour afficher le modal de modification des produits
+function openEditModalProduit(produit) {
+    const existingModal = document.getElementById("editProductModal");
+    if (existingModal) existingModal.remove();
+
+    const modalContent = `
+        <div class="modal is-active" id="editProductModal">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Modifier Produit</p>
+                    <button class="delete" aria-label="close" onclick="closeModal('editProductModal')"></button>
+                </header>
+                <form method="POST" enctype="multipart/form-data">
+                    <section class="modal-card-body">
+                        <input type="hidden" name="id_produit" value="${produit.id}">
+                        <div class="field">
+                            <label class="label">Nom</label>
+                            <div class="control">
+                                <input class="input" type="text" name="nom" value="${produit.nom}" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Libellé</label>
+                            <div class="control">
+                                <input class="input" type="text" name="libelle" value="${produit.libelle || ''}" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Description</label>
+                            <div class="control">
+                                <textarea class="textarea" name="description" required>${produit.description}</textarea>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Prix</label>
+                            <div class="control">
+                                <input class="input" type="number" step="0.01" name="prix" value="${produit.prix}" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Quantité</label>
+                            <div class="control">
+                                <input class="input" type="number" name="quantite" value="${produit.quantite}" required>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Image actuelle</label>
+                            <div class="control">
+                                ${produit.image ? `<img src="../../${produit.image}" alt="${produit.nom_produit}" style="max-width: 100px;">` : '<p>Aucune image</p>'}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Nouvelle Image (facultatif)</label>
+                            <div class="control">
+                                <input class="input" type="file" name="image" accept="image/*">
+                            </div>
+                        </div>
+                    </section>
+                    <footer class="modal-card-foot">
+                        <button type="submit" name="edit_product" class="button is-success">Modifier</button>
+                        <button type="button" class="button" onclick="closeModal('editProductModal')">Annuler</button>
+                    </footer>
+                </form>
+            </div>
+        </div>
+    `;
+
+    document.body.insertAdjacentHTML("beforeend", modalContent);
+}
+
+
+
 function closeModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) modal.remove();
 }
+
 
 </script>
 </body>
