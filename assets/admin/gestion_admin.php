@@ -270,6 +270,7 @@ $produits = $pdo->query("SELECT * FROM produits ORDER BY nom_produit ASC")->fetc
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion Admin</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="../../assets/css/modal.css">
 </head>
 <body>
 <?php include '../includes/header.php'; ?>
@@ -365,6 +366,7 @@ $produits = $pdo->query("SELECT * FROM produits ORDER BY nom_produit ASC")->fetc
                         <td>
                             <?php if (!empty($produit['image'])): ?>
                                 <img src="../../<?= htmlspecialchars($produit['image'] ?? ''); ?>" style="max-width: 100px;">
+                                
                             <?php endif; ?>
                         </td>
                         <td><?= htmlspecialchars($produit['nom_produit'] ?? ''); ?></td>
@@ -679,15 +681,32 @@ function openEditModalProduit(produit) {
 
     const modalContent = `
         <div class="modal is-active" id="editProductModal">
-            <div class="modal-background"></div>
-            <div class="modal-card">
-                <header class="modal-card-head">
-                    <p class="modal-card-title">Modifier Produit</p>
-                    <button class="delete" aria-label="close" onclick="closeModal('editProductModal')"></button>
-                </header>
-                <form method="POST" enctype="multipart/form-data">
-                    <section class="modal-card-body">
-                        <input type="hidden" name="id_produit" value="${produit.id}">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Modifier Produit</p>
+            <button class="delete" aria-label="close" onclick="closeModal('editProductModal')"></button>
+        </header>
+        <form method="POST" enctype="multipart/form-data">
+            <section class="modal-card-body">
+                <div class="columns is-gapless">
+                     <div class="columns">
+                    <!-- Colonne pour l'image -->
+                    <div class="column is-one-third has-text-centered">
+                        <figure class="image is-128x128 is-inline-block">
+                            <img id="productImagePreview" src="../../uploads/produits/${produit.image}" alt="Aperçu de l'image" style="max-width: 100%; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 10px;">
+                        </figure>
+                        <div class="field mt-3">
+                            <label class="label">Changer l'image</label>
+                            <div class="control">
+                                <input class="input" type="file" name="image" accept="image/*" onchange="previewImage(event)">
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+
+                    <!-- Colonne pour les champs -->
+                    <div class="column">
                         <div class="field">
                             <label class="label">Nom</label>
                             <div class="control">
@@ -718,35 +737,35 @@ function openEditModalProduit(produit) {
                                 <input class="input" type="number" name="quantite" value="${produit.quantite}" required>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </section>
+            <footer class="modal-card-foot">
+                <button type="submit" name="edit_product" class="button is-success">Modifier</button>
+                <button type="button" class="button" onclick="closeModal('editProductModal')">Annuler</button>
+            </footer>
+        </form>
+    </div>
+</div>
 
-                <!-- Champ Image -->
-                        <div class="field">
-                            <label class="label">Image du produit</label>
-                            <div class="control">
-                                <input class="input" type="file" name="image" accept="image/*" required>
-                            </div>
-                        </div>
-
-
-                        <div class="field">
-                            <label class="label">Nouvelle Image (facultatif)</label>
-                            <div class="control">
-                                <input class="input" type="file" name="image" accept="image/*">
-                            </div>
-                        </div>
-
-
-                    </section>
-                    <footer class="modal-card-foot">
-                        <button type="submit" name="edit_product" class="button is-success">Modifier</button>
-                        <button type="button" class="button" onclick="closeModal('editProductModal')">Annuler</button>
-                    </footer>
-                </form>
-            </div>
-        </div>
     `;
 
     document.body.insertAdjacentHTML("beforeend", modalContent);
+
+// Ajuste la hauteur après l'insertion
+const modalCard = document.querySelector("#editProductModal .modal-card");
+modalCard.style.maxHeight = "150vh";
+}
+
+function previewImage(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('productImagePreview').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
 }
 
 
