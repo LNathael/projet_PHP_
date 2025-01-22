@@ -2,9 +2,36 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+include '../config/db.php'; // Inclure la connexion à la base de données
+
 $isConnected = isset($_SESSION['user_id']);
 $isAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'administrateur';
 $isSuperAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'super_administrateur';
+
+// Vérifiez que l'utilisateur est connecté et que l'ID utilisateur est défini
+if ($isConnected) {
+    $user_id = $_SESSION['user_id'];
+
+    // Récupération des informations de l'utilisateur
+    $stmt = $pdo->prepare("SELECT * FROM utilisateurs WHERE id_utilisateur = :id");
+    $stmt->execute(['id' => $user_id]);
+    $user = $stmt->fetch();
+
+    // Vérifiez que la requête a retourné un résultat
+    if ($user) {
+        $userName = htmlspecialchars($user['nom']);
+    } else {
+        $userName = 'Utilisateur';
+    }
+} else {
+    $userName = 'Utilisateur';
+}
+
+// Récupérer les produits depuis la base de données
+$produits = $pdo->query("SELECT * FROM produits LIMIT 5")->fetchAll(PDO::FETCH_ASSOC);
+
+// Récupérer les recettes depuis la base de données
+$recettes = $pdo->query("SELECT * FROM recettes LIMIT 5")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -12,13 +39,14 @@ $isSuperAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'super_adminis
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accueil</title>
+    <link rel="stylesheet" href="../css/style.css"> <!-- Chemin relatif vers le fichier CSS -->
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <script src="js/app.js" defer></script>
+   
 </head>
 <body>
     <?php include '../includes/header.php'; ?>
-
-
-
-
     <main class="container mt-5">
     <!-- Titre principal -->
     <section class="hero is-primary is-medium has-text-centered">
@@ -32,7 +60,9 @@ $isSuperAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'super_adminis
             </section>
         <?php else: ?>
             <section class="section">
-                <h1 class="title">Bienvenue <?= htmlspecialchars($_SESSION['nom'] ?? 'Utilisateur'); ?> !</h1>
+           
+
+                <h1 class="title">Bienvenue <?= htmlspecialchars($user['prenom'] . ' ' . $user['nom']);  ?> !</h1>
                     <a href="programmes_personnalises.php" class="button is-primary">Programmes personnalisés</a>
                     <a href="recettes.php" class="button is-link">Recettes</a>
                     <a href="avis.php" class="button is-info">Avis</a>
@@ -46,21 +76,36 @@ $isSuperAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'super_adminis
         <?php endif; ?>
     </section>
 
-    <!-- Section Carousel -->
+    <!-- Section Carousel Produits -->
     <section class="section">
         <h2 class="title is-4 has-text-centered">Nos meilleurs produits</h2>
         <div class="carousel">
-            <div class="slide active">
-                <img src="../assets/img/image1.jpg" alt="Image 1">
-            </div>
-            <div class="slide">
-                <img src="../assets/img/image2.jpg" alt="Image 2">
-            </div>
-            <div class="slide">
-                <img src="../assets/img/image3.jpg" alt="Image 3">
-            </div>
+            <?php foreach ($produits as $produit): ?>
+                <div class="slide">
+                <a href="<?= $isConnected ? 'detail_produit.php?id=' . $produit['id_produit'] : 'connexion.php'; ?>">
+                    <img src="../../<?= htmlspecialchars($produit['image']); ?>" alt="<?= htmlspecialchars($produit['nom_produit']); ?>">
+                    <p><?= htmlspecialchars($produit['nom_produit']); ?></p>
+                </a>
+                </div>
+            <?php endforeach; ?>
         </div>
     </section>
+
+    <!-- Section Carousel Recettes -->
+    <section class="section">
+        <h2 class="title is-4 has-text-centered">Nos meilleures recettes</h2>
+        <div class="carousel">
+            <?php foreach ($recettes as $recette): ?>
+                <div class="slide">
+                    <a href="<?= $isConnected ? 'detail_recette.php?id=' . $recette['id_recette'] : 'connexion.php'; ?>">
+                        <img src="../../<?= htmlspecialchars($recette['image']); ?>" alt="<?= htmlspecialchars($recette['titre']); ?>">
+                        <p><?= htmlspecialchars($recette['titre']); ?></p>
+                    </a>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </section>
+
   <!-- Bouton pour déclencher la popup -->
   <div class="has-text-centered">
             <button class="button is-primary popup-trigger">Afficher la popup</button>

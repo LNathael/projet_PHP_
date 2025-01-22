@@ -32,8 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Carrousel simple pour afficher des images en boucle
-    const carousel = document.querySelector('.carousel');
-    if (carousel) {
+    const carousels = document.querySelectorAll('.carousel');
+    carousels.forEach(carousel => {
         const slides = carousel.querySelectorAll('.slide');
         let currentIndex = 0;
 
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currentIndex = (currentIndex + 1) % slides.length;
             slides[currentIndex].classList.add('active');
         }, 3000); // Change toutes les 3 secondes
-    }
+    });
 
     // Gestion des popups
     const popupTrigger = document.querySelector('.popup-trigger');

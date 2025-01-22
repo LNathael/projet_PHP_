@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../config/db.php'; // Connexion à la base de données
+require_once '../config/db.php';
 
 // Vérifier si l'utilisateur est connecté
 if (!isset($_SESSION['id_utilisateur'])) {
@@ -8,13 +8,8 @@ if (!isset($_SESSION['id_utilisateur'])) {
     exit;
 }
 
+// Récupérer l'ID utilisateur depuis la session
 $id_utilisateur = $_SESSION['id_utilisateur'];
-
-// Vérifier si $id_utilisateur est défini
-if (empty($id_utilisateur)) {
-    header('Location: connexion.php');
-    exit;
-}
 
 // Actions sur le panier
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -24,17 +19,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     switch ($action) {
         case 'ajouter':
-            // Vérifier si le produit existe dans le panier
+            // Vérifier si le produit existe déjà dans le panier
             $stmt = $pdo->prepare("SELECT * FROM panier WHERE id_utilisateur = ? AND id_produit = ?");
             $stmt->execute([$id_utilisateur, $id_produit]);
             $produit_panier = $stmt->fetch();
 
             if ($produit_panier) {
-                // Mettre à jour la quantité
+                // Si le produit existe déjà, incrémentez sa quantité
                 $stmt = $pdo->prepare("UPDATE panier SET quantite = quantite + ? WHERE id_utilisateur = ? AND id_produit = ?");
                 $stmt->execute([$quantite, $id_utilisateur, $id_produit]);
             } else {
-                // Ajouter le produit au panier
+                // Sinon, ajoutez le produit au panier
                 $stmt = $pdo->prepare("INSERT INTO panier (id_utilisateur, id_produit, quantite) VALUES (?, ?, ?)");
                 $stmt->execute([$id_utilisateur, $id_produit, $quantite]);
             }
@@ -76,6 +71,7 @@ $stmt = $pdo->prepare("
 $stmt->execute([$id_utilisateur]);
 $panier = $stmt->fetchAll();
 ?>
+
 
 <?php include 'includes/header.php'; ?>
 

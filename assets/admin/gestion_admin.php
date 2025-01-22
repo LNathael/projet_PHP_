@@ -270,7 +270,7 @@ $produits = $pdo->query("SELECT * FROM produits ORDER BY nom_produit ASC")->fetc
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion Admin</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    <link rel="stylesheet" href="../../assets/css/modal.css">
+    
 </head>
 <body>
 <?php include '../includes/header.php'; ?>
