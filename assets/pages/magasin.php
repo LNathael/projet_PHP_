@@ -17,7 +17,6 @@ $produits = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Magasin</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    <link rel="stylesheet" href="../css/style.css"> <!-- Chemin relatif vers le fichier CSS -->
 </head>
 <body>
     <main class="container">

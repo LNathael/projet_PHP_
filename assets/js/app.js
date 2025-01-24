@@ -1,6 +1,63 @@
 // Assurez-vous que le DOM est chargé avant d'exécuter les scripts
 document.addEventListener('DOMContentLoaded', () => {
 
+    // Initialiser Swiper pour les produits
+    var produitsSwiper = new Swiper('.produits-swiper', {
+        slidesPerView: 1,
+        spaceBetween: 10,
+        navigation: {
+            nextEl: '.produits-button-next',
+            prevEl: '.produits-button-prev',
+        },
+        pagination: {
+            el: '.produits-pagination',
+            clickable: true,
+        },
+        breakpoints: {
+            640: {
+                slidesPerView: 2,
+                spaceBetween: 20,
+            },
+            768: {
+                slidesPerView: 3,
+                spaceBetween: 30,
+            },
+            1024: {
+                slidesPerView: 4,
+                spaceBetween: 40,
+            },
+        },
+    });
+
+    // Initialiser Swiper pour les recettes
+    var recettesSwiper = new Swiper('.recettes-swiper', {
+        slidesPerView: 1,
+        spaceBetween: 10,
+        loop: true,
+        autoplay: {
+            delay: 3000,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: '.recettes-pagination',
+            clickable: true,
+        },
+        breakpoints: {
+            640: {
+                slidesPerView: 2,
+                spaceBetween: 20,
+            },
+            768: {
+                slidesPerView: 3,
+                spaceBetween: 30,
+            },
+            1024: {
+                slidesPerView: 4,
+                spaceBetween: 40,
+            },
+        },
+    });
+
     // Gestion interactive du panier avec AJAX
     const addToCartButtons = document.querySelectorAll('.add-to-cart');
     if (addToCartButtons) {
@@ -65,19 +122,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-        // Active la fonctionnalité du menu burger pour les écrans mobiles
-        const navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
-    
-        if (navbarBurgers.length > 0) {
-            navbarBurgers.forEach(el => {
-                el.addEventListener('click', () => {
-                    const target = el.dataset.target;
-                    const $target = document.getElementById(target);
-    
-                    el.classList.toggle('is-active');
-                    $target.classList.toggle('is-active');
-                });
+
+    // Active la fonctionnalité du menu burger pour les écrans mobiles
+    const navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+    if (navbarBurgers.length > 0) {
+        navbarBurgers.forEach(el => {
+            el.addEventListener('click', () => {
+                const target = el.dataset.target;
+                const $target = document.getElementById(target);
+
+                el.classList.toggle('is-active');
+                $target.classList.toggle('is-active');
             });
-        }
-    
+        });
+    }
+
 });

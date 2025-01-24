@@ -2,7 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-include '../config/db.php'; // Inclure la connexion à la base de données
+require_once '../config/db.php'; // Inclure la connexion à la base de données
 
 $isConnected = isset($_SESSION['user_id']);
 $isAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'administrateur';
@@ -28,10 +28,10 @@ if ($isConnected) {
 }
 
 // Récupérer les produits depuis la base de données
-$produits = $pdo->query("SELECT * FROM produits LIMIT 5")->fetchAll(PDO::FETCH_ASSOC);
+$produits = $pdo->query("SELECT * FROM produits LIMIT 15")->fetchAll(PDO::FETCH_ASSOC);
 
 // Récupérer les recettes depuis la base de données
-$recettes = $pdo->query("SELECT * FROM recettes LIMIT 5")->fetchAll(PDO::FETCH_ASSOC);
+$recettes = $pdo->query("SELECT * FROM recettes LIMIT 15")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -40,135 +40,87 @@ $recettes = $pdo->query("SELECT * FROM recettes LIMIT 5")->fetchAll(PDO::FETCH_A
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accueil</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    
-    <script src="js/app.js" defer></script>
-    <style>
-    /* Styles pour le menu burger */
-    .carousel {
-        display: flex;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        scroll-behavior: smooth;
-        -webkit-overflow-scrolling: touch;
-        margin-bottom: 1rem;
-    }
-
-    .slide {
-        flex: 0 0 auto;
-        scroll-snap-align: start;
-        margin-right: 1rem;
-    }
-
-    .slide img {
-        width: 100%;
-        border-radius: 0.5rem;
-    }
-
-    .popup {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .popup-content {
-        background-color: white;
-        padding: 1rem;
-        border-radius: 0.5rem;
-    }
-
-    .popup-close {
-        position: absolute;
-        top: 0;
-        right: 0;
-    }
-
-    .popup-close:hover {
-        cursor: pointer;
-    }
-    </style>
+    <link rel="stylesheet" href="../css/style.css"> <!-- Chemin relatif vers le fichier CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"> <!-- Swiper CSS -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script> <!-- Swiper JS -->
+    <script src="../js/app.js" defer></script>
 </head>
 <body>
     <?php include '../includes/header.php'; ?>
-
-
     <main class="container mt-5">
-    <!-- Titre principal -->
-    <section class="hero is-primary is-medium has-text-centered">
-        <div class="hero-body">
-        <?php if (!$isConnected): ?>
-            <section class="section">
-                <h1 class="title">Bienvenue sur notre site</h1>
-                <p class="content">Découvrez des programmes de musculation personnalisés et des recettes adaptées à vos besoins !</p>
-                <a href="inscription.php" class="button is-primary">Inscription</a>
-                <a href="connexion.php" class="button is-link">Connexion</a>
-            </section>
-        <?php else: ?>
-            <section class="section">
-           
-
-                <h1 class="title">Bienvenue <?= htmlspecialchars($user['prenom'] . ' ' . $user['nom']);  ?> !</h1>
-                    <a href="programmes_personnalises.php" class="button is-primary">Programmes personnalisés</a>
-                    <a href="recettes.php" class="button is-link">Recettes</a>
-                    <a href="avis.php" class="button is-info">Avis</a>
-            </section>
-            <?php if ($isAdmin || $isSuperAdmin): ?>
-                <section class="section">
-                    <h2 class="title is-4">Espace Administrateur</h2>
-                    <a href="/assets/admin/gestion_admin.php" class="button is-danger">Gestion Admin</a>
+        <!-- Titre principal -->
+        <section class="hero is-primary is-medium has-text-centered">
+            <div class="hero-body">
+                <?php if (!$isConnected): ?>
+                    <section class="section">
+                        <h1 class="title">Bienvenue sur notre site</h1>
+                        <p class="content">Découvrez des programmes de musculation personnalisés et des recettes adaptées à vos besoins !</p>
+                        <a href="inscription.php" class="button is-primary">Inscription</a>
+                        <a href="connexion.php" class="button is-link">Connexion</a>
                     </section>
-            <?php endif; ?>
-        <?php endif; ?>
-    </section>
+                <?php else: ?>
+                    <section class="section">
+                        <h1 class="title">Bienvenue <?= htmlspecialchars($user['prenom'] . ' ' . $user['nom']); ?> !</h1>
+                        <a href="programmes_personnalises.php" class="button is-primary">Programmes personnalisés</a>
+                        <a href="recettes.php" class="button is-link">Recettes</a>
+                        <a href="avis.php" class="button is-info">Avis</a>
+                    </section>
+                    <?php if ($isAdmin || $isSuperAdmin): ?>
+                        <section class="section">
+                            <h2 class="title is-4">Espace Administrateur</h2>
+                            <a href="/assets/admin/gestion_admin.php" class="button is-danger">Gestion Admin</a>
+                        </section>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </div>
+        </section>
 
-    <!-- Section Carousel Produits -->
-    <section class="section">
-        <h2 class="title is-4 has-text-centered">Nos meilleurs produits</h2>
-        <div class="carousel">
-            <?php foreach ($produits as $produit): ?>
-                <div class="slide">
-                    <img src="../../<?= htmlspecialchars($produit['image']); ?>" alt="<?= htmlspecialchars($produit['nom_produit']); ?>">
-                    <p><?= htmlspecialchars($produit['nom_produit']); ?></p>
+        <!-- Section Carousel Produits -->
+        <section class="section">
+            <h2 class="title is-4 has-text-centered">Nos meilleurs produits</h2>
+            <div class="swiper-container produits-swiper">
+                <div class="swiper-wrapper">
+                    <?php foreach ($produits as $produit): ?>
+                        <div class="swiper-slide">
+                            <a href="<?= $isConnected ? 'detail_produit.php?id=' . $produit['id_produit'] : 'connexion.php'; ?>">
+                                <img src="../../<?= htmlspecialchars($produit['image']); ?>" alt="<?= htmlspecialchars($produit['nom_produit']); ?>">
+                                <p><?= htmlspecialchars($produit['nom_produit']); ?></p>
+                            </a>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
-            <?php endforeach; ?>
-        </div>
-    </section>
+                <!-- Add Pagination -->
+                <div class="swiper-pagination produits-pagination"></div>
+                <!-- Add Navigation -->
+                <div class="swiper-button-next produits-button-next"></div>
+                <div class="swiper-button-prev produits-button-prev"></div>
+            </div>
+        </section>
 
-    <!-- Section Carousel Recettes -->
-    <section class="section">
-        <h2 class="title is-4 has-text-centered">Nos meilleures recettes</h2>
-        <div class="carousel">
-            <?php foreach ($recettes as $recette): ?>
-                <div class="slide">
-                    <a href="<?= $isConnected ? 'detail_recette.php?id=' . $recette['id_recette'] : 'connexion.php'; ?>">
-                        <img src="../../<?= htmlspecialchars($recette['image']); ?>" alt="<?= htmlspecialchars($recette['titre']); ?>">
-                        <p><?= htmlspecialchars($recette['titre']); ?></p>
-                    </a>
+        <!-- Section Carousel Recettes -->
+        <section class="section">
+            <h2 class="title is-4 has-text-centered">Nos meilleures recettes</h2>
+            <div class="swiper-container recettes-swiper">
+                <div class="swiper-wrapper">
+                    <?php foreach ($recettes as $recette): ?>
+                        <div class="swiper-slide">
+                            <a href="<?= $isConnected ? 'detail_recette.php?id=' . $recette['id_recette'] : 'connexion.php'; ?>">
+                                <img src="../../<?= htmlspecialchars($recette['image']); ?>" alt="<?= htmlspecialchars($recette['titre']); ?>">
+                                <p><?= htmlspecialchars($recette['titre']); ?></p>
+                            </a>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
-            <?php endforeach; ?>
-        </div>
-    </section>
+                <!-- Add Pagination -->
+                <div class="swiper-pagination recettes-pagination"></div>
+            </div>
+        </section>
 
-  <!-- Bouton pour déclencher la popup -->
-  <div class="has-text-centered">
+        <!-- Bouton pour déclencher la popup -->
+        <div class="has-text-centered">
             <button class="button is-primary popup-trigger">Afficher la popup</button>
         </div>
-    <!-- Section Popup -->
-    <div class="popup is-hidden">
-        <div class="popup-content box">
-            <button class="delete popup-close"></button>
-            <h2 class="title is-4">Titre de la popup</h2>
-            <p>Contenu de la popup ici.</p>
-        </div>
-    </div>
-       
     </main>
-
     <?php include '../includes/footer.php'; ?>
 </body>
 </html>

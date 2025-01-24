@@ -59,11 +59,13 @@ try {
         <?php if (!empty($recette['image'])): ?>
                                 <img src="../../../<?= htmlspecialchars($recette['image']); ?>" alt="<?= htmlspecialchars($recette['titre']); ?>" style="max-width: 100%; height: auto; margin-top: 10px;">
         <?php endif; ?>
-
+        <br></br>
         <h2 class="title is-5">Description</h2>
         <p><?= htmlspecialchars($recette['description']); ?></p>
+        <br></br>
         <h2 class="title is-5">Ingrédients</h2>
         <p><?= nl2br(htmlspecialchars($recette['ingredients'])); ?></p>
+        <br></br>
         <h2 class="title is-5">Étapes</h2>
         <p><?= nl2br(htmlspecialchars($recette['etapes'])); ?></p>
     </section>
