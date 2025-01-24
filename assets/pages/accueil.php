@@ -39,14 +39,64 @@ $recettes = $pdo->query("SELECT * FROM recettes LIMIT 5")->fetchAll(PDO::FETCH_A
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accueil</title>
-    <link rel="stylesheet" href="../css/style.css"> <!-- Chemin relatif vers le fichier CSS -->
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    
     <script src="js/app.js" defer></script>
-   
+    <style>
+    /* Styles pour le menu burger */
+    .carousel {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        margin-bottom: 1rem;
+    }
+
+    .slide {
+        flex: 0 0 auto;
+        scroll-snap-align: start;
+        margin-right: 1rem;
+    }
+
+    .slide img {
+        width: 100%;
+        border-radius: 0.5rem;
+    }
+
+    .popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .popup-content {
+        background-color: white;
+        padding: 1rem;
+        border-radius: 0.5rem;
+    }
+
+    .popup-close {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+    .popup-close:hover {
+        cursor: pointer;
+    }
+    </style>
 </head>
 <body>
     <?php include '../includes/header.php'; ?>
+
+
     <main class="container mt-5">
     <!-- Titre principal -->
     <section class="hero is-primary is-medium has-text-centered">
@@ -82,10 +132,8 @@ $recettes = $pdo->query("SELECT * FROM recettes LIMIT 5")->fetchAll(PDO::FETCH_A
         <div class="carousel">
             <?php foreach ($produits as $produit): ?>
                 <div class="slide">
-                <a href="<?= $isConnected ? 'detail_produit.php?id=' . $produit['id_produit'] : 'connexion.php'; ?>">
                     <img src="../../<?= htmlspecialchars($produit['image']); ?>" alt="<?= htmlspecialchars($produit['nom_produit']); ?>">
                     <p><?= htmlspecialchars($produit['nom_produit']); ?></p>
-                </a>
                 </div>
             <?php endforeach; ?>
         </div>

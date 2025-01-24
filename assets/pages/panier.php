@@ -1,15 +1,17 @@
 <?php
-session_start();
-require_once '../config/db.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+require_once '../config/db.php'; // Inclure la connexion à la base de données
 
 // Vérifier si l'utilisateur est connecté
-if (!isset($_SESSION['id_utilisateur'])) {
+if (!isset($_SESSION['user_id'])) {
     header('Location: connexion.php');
     exit;
 }
 
 // Récupérer l'ID utilisateur depuis la session
-$id_utilisateur = $_SESSION['id_utilisateur'];
+$id_utilisateur = $_SESSION['user_id'];
 
 // Actions sur le panier
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -63,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Récupérer les produits du panier
 $stmt = $pdo->prepare("
-    SELECT p.nom_produit, p.prix, pa.quantite, pa.id_produit
+    SELECT p.nom_produit, p.prix, p.image, pa.quantite, pa.id_produit
     FROM panier pa
     JOIN produits p ON pa.id_produit = p.id_produit
     WHERE pa.id_utilisateur = ?
@@ -72,8 +74,7 @@ $stmt->execute([$id_utilisateur]);
 $panier = $stmt->fetchAll();
 ?>
 
-
-<?php include 'includes/header.php'; ?>
+<?php include '../includes/header.php'; ?>
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -91,6 +92,7 @@ $panier = $stmt->fetchAll();
             <table class="table is-striped is-fullwidth">
                 <thead>
                     <tr>
+                        <th>Image</th>
                         <th>Produit</th>
                         <th>Prix Unitaire</th>
                         <th>Quantité</th>
@@ -106,6 +108,11 @@ $panier = $stmt->fetchAll();
                         $total += $sous_total;
                     ?>
                         <tr>
+                            <td>
+                                <?php if (!empty($item['image'])): ?>
+                                    <img src="../../<?= htmlspecialchars($item['image']); ?>" alt="<?= htmlspecialchars($item['nom_produit']); ?>" class="product-image" style="width: 100px; height: auto;">
+                                <?php endif; ?>
+                            </td>
                             <td><?= htmlspecialchars($item['nom_produit']); ?></td>
                             <td><?= number_format($item['prix'], 2); ?> €</td>
                             <td><?= $item['quantite']; ?></td>
@@ -129,7 +136,7 @@ $panier = $stmt->fetchAll();
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="3" class="has-text-right">Total :</th>
+                        <th colspan="4" class="has-text-right">Total :</th>
                         <th colspan="2"><?= number_format($total, 2); ?> €</th>
                     </tr>
                 </tfoot>
@@ -151,4 +158,4 @@ $panier = $stmt->fetchAll();
 </body>
 </html>
 
-<?php include 'includes/footer.php'; ?>
+<?php include '../includes/footer.php'; ?>
