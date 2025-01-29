@@ -1,3 +1,14 @@
+/* Variables */
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --accent-color: #e74c3c;
+    --text-light: #ffffff;
+    --text-dark: #2c3e50;
+    --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
 
 /* Header */
 header {
@@ -13,8 +24,59 @@ header nav a {
     text-decoration: none;
 }
 
+/* Header et Navigation */
 .navbar {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: var(--gradient);
+    box-shadow: var(--shadow);
+    padding: 1rem 0;
+}
+
+.navbar-brand img {
+    max-height: 40px;
+}
+
+.navbar-item {
+    color: var(--text-light);
+    transition: var(--transition);
+}
+
+.navbar-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-light);
+}
+
+.navbar-link {
+    color: var(--text-light);
+}
+
+.navbar-dropdown {
+    background: var(--primary-color);
+    border-radius: 0 0 8px 8px;
+}
+
+.navbar-dropdown .navbar-item {
+    color: var(--text-light);
+}
+
+.navbar-dropdown .navbar-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.button.is-warning {
+    transition: var(--transition);
+}
+
+.button.is-warning:hover {
+    transform: translateY(-2px);
+}
+
+.input.is-rounded {
+    border-radius: 20px;
+    transition: var(--transition);
+}
+
+.input.is-rounded:focus {
+    box-shadow: 0 0 0 2px var(--secondary-color);
 }
 
 .navbar-item img {

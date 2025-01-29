@@ -11,68 +11,58 @@ if (session_status() === PHP_SESSION_NONE) {
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../css/style.css">
+   
     <title>Projet Achat</title>
 </head>
 <body>
-<header>
-    <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
-            <a class="navbar-item" href="../pages/accueil.php">
-                <img src="../img/logo.png" alt="Logo" width="40" height="40">
-            </a>
-
-            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasic">
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
+<header class="site-header">
+    <nav class="nav-main">
+        <div class="nav-brand">
+            <a href="../pages/accueil.php" class="brand-link">
+                <img src="../img/logo.png" alt="Logo" class="brand-logo">
             </a>
         </div>
 
-        <div id="navbarBasic" class="navbar-menu">
-            <div class="navbar-start">
-                <a class="navbar-item" href="../pages/accueil.php">Accueil</a>
-                <a class="navbar-item" href="../pages/magasin.php">Magasin</a>
-                <a class="navbar-item" href="../pages/calculateur_calories.php">Calculateur de calories</a>
-                <a class="navbar-item" href="../pages/blog.php">Blog</a>
+        <div class="nav-links">
+            <a href="../pages/accueil.php" class="nav-link">Accueil</a>
+            <a href="../pages/magasin.php" class="nav-link">Magasin</a>
+            <a href="../pages/calculateur_calories.php" class="nav-link">Calculateur de calories</a>
+            <a href="../pages/blog.php" class="nav-link">Blog</a>
 
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link">Programmes</a>
-                    <div class="navbar-dropdown">
-                        <a class="navbar-item" href="../pages/programmes_masse.php">Prise de masse</a>
-                        <a class="navbar-item" href="../pages/programmes_perte.php">Perte de poids</a>
-                        <a class="navbar-item" href="../pages/programmes_debutants.php">Débutants</a>
-                    </div>
-                </div>
-
-                
-            </div>
-
-            <div class="navbar-end">
-                <div class="navbar-item">
-                    <form action="../pages/recherche.php" method="GET">
-                        <input class="input is-rounded" type="text" name="query" placeholder="Rechercher...">
-                    </form>
-                </div>
-        
-
-                <div class="navbar-item">
-                    <a href="../pages/panier.php" class="button is-warning">
-                        <span>Panier</span>
-                        <span class="tag is-light"><?= isset($_SESSION['cart_count']) ? $_SESSION['cart_count'] : 0; ?></span>
-                    </a>
-                </div>
-                <div class="navbar-item">
-                    <div class="buttons">
-                        <?php if (isset($_SESSION['user_id'])): ?>
-                            <a class="button is-light" href="../pages/compte.php">Mon compte</a>
-                            <a class="button is-danger" href="../pages/deconnexion.php">Déconnexion</a>
-                        <?php else: ?>
-                            <a class="button is-primary" href="../pages/inscription.php"><strong>S'inscrire</strong></a>
-                            <a class="button is-light" href="../pages/connexion.php">Se connecter</a>
-                        <?php endif; ?>
-                    </div>
+            <div class="nav-dropdown">
+                <a class="nav-link dropdown-trigger">Programmes</a>
+                <div class="dropdown-content">
+                    <a href="../pages/programmes_masse.php" class="dropdown-item">Prise de masse</a>
+                    <a href="../pages/programmes_perte.php" class="dropdown-item">Perte de poids</a>
+                    <a href="../pages/programmes_debutants.php" class="dropdown-item">Débutants</a>
                 </div>
             </div>
+        </div>
+
+        <div class="nav-actions">
+            <form action="../pages/recherche.php" method="GET" class="search-form">
+                <input type="text" name="query" class="search-input" placeholder="Rechercher...">
+            </form>
+
+            <a href="../pages/panier.php" class="cart-link">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count"><?= isset($_SESSION['cart_count']) ? $_SESSION['cart_count'] : 0 ?></span>
+            </a>
+
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <div class="user-menu">
+                    <a href="../pages/compte.php" class="nav-button">Mon compte</a>
+                    <a href="../pages/deconnexion.php" class="nav-button nav-button-logout">Déconnexion</a>
+                </div>
+            <?php else: ?>
+                <div class="auth-buttons">
+                    <a href="../pages/inscription.php" class="nav-button nav-button-primary">S'inscrire</a>
+                    <a href="../pages/connexion.php" class="nav-button">Se connecter</a>
+                </div>
+            <?php endif; ?>
         </div>
     </nav>
 </header>
+</body>
+</html>
