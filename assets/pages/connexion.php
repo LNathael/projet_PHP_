@@ -1,7 +1,5 @@
 <?php
 session_start();
-
-include '../includes/header.php'; // Remonte d'un niveau depuis "pages/"
 include '../config/db.php'; // Remonte d'un niveau puis va dans "config/"
 
 // Traitement du formulaire de connexion
@@ -38,7 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>

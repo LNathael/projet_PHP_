@@ -83,7 +83,7 @@ $recettes = $pdo->query("SELECT * FROM recettes LIMIT 15")->fetchAll(PDO::FETCH_
                     <?php if ($isAdmin || $isSuperAdmin): ?>
                         <section class="section">
                             <h2 class="title is-4">Espace Administrateur</h2>
-                            <a href="/assets/admin/gestion_admin.php" class="button is-danger">Gestion Admin</a>
+                            <a href="../admin/gestion_admin.php" class="button is-danger">Gestion Admin</a>
                         </section>
                     <?php endif; ?>
                 <?php endif; ?>

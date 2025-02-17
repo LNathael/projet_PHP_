@@ -57,7 +57,7 @@ try {
         <h2 class="title is-5">Image</h2>
       <!-- Affichage de l'image -->
         <?php if (!empty($recette['image'])): ?>
-                                <img src="../../../<?= htmlspecialchars($recette['image']); ?>" alt="<?= htmlspecialchars($recette['titre']); ?>" style="max-width: 100%; height: auto; margin-top: 10px;">
+                                <img src="../../<?= htmlspecialchars($recette['image']); ?>" alt="<?= htmlspecialchars($recette['titre']); ?>" style="max-width: 100%; height: auto; margin-top: 10px;">
         <?php endif; ?>
         <br></br>
         <h2 class="title is-5">Description</h2>
