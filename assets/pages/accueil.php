@@ -64,6 +64,7 @@ $recettes = $pdo->query("SELECT * FROM recettes LIMIT 15")->fetchAll(PDO::FETCH_
         <!-- Titre principal -->
         <section class="hero is-primary is-medium has-text-centered fade-in">
             <div class="hero-body">
+            <?php include '../includes/popup_last_message.php'; ?>
                 <?php if (!$isConnected): ?>
                     <section class="section welcome-section">
                         <h1 class="title gradient-text">Bienvenue sur notre site</h1>
@@ -79,6 +80,7 @@ $recettes = $pdo->query("SELECT * FROM recettes LIMIT 15")->fetchAll(PDO::FETCH_
                         <a href="programmes_personnalises.php" class="button is-primary">Programmes personnalisés</a>
                         <a href="recettes.php" class="button is-link">Recettes</a>
                         <a href="avis.php" class="button is-info">Avis</a>
+                        <a href="salons.php" class="button is-info">💬 Chat Communautaire</a>
                     </section>
                     <?php if ($isAdmin || $isSuperAdmin): ?>
                         <section class="section">
@@ -135,10 +137,7 @@ $recettes = $pdo->query("SELECT * FROM recettes LIMIT 15")->fetchAll(PDO::FETCH_
             </div>
         </section>
 
-        <!-- Bouton pour déclencher la popup -->
-        <div class="has-text-centered">
-            <button class="button is-primary popup-trigger">Afficher la popup</button>
-        </div>
+        
     </main>
     <?php include '../includes/footer.php'; ?>
 </body>
