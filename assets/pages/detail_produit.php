@@ -31,6 +31,15 @@ try {
     $stmt_avis->execute(['id' => $id_produit]);
     $avis = $stmt_avis->fetchAll(PDO::FETCH_ASSOC);
 
+    // Calculer la moyenne des avis
+    $stmt_moyenne = $pdo->prepare("
+        SELECT AVG(note) as moyenne 
+        FROM avis 
+        WHERE type_contenu = 'produit' AND contenu_id = :id
+    ");
+    $stmt_moyenne->execute(['id' => $id_produit]);
+    $moyenne = $stmt_moyenne->fetchColumn();
+
 } catch (PDOException $e) {
     die("Erreur lors de la récupération du produit : " . $e->getMessage());
 }
@@ -42,13 +51,31 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($produit['nom_produit']); ?></title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+        function toggleAvis() {
+            var avisElements = document.querySelectorAll('.avis-item');
+            for (var i = 2; i < avisElements.length; i++) {
+                avisElements[i].classList.toggle('is-hidden');
+            }
+            var button = document.getElementById('toggleAvisButton');
+            var icon = button.querySelector('i');
+            if (icon.classList.contains('fa-chevron-down')) {
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            } else {
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            }
+        }
+    </script>
 </head>
 <body>
 <main class="container">
     <section class="section">
         <h1 class="title"><?= htmlspecialchars($produit['nom_produit']); ?></h1>
-        <p><strong>Libellé :</strong> <?= htmlspecialchars($produit['libelle']?? 'libelle non disponible'); ?></p>
-
+        <p><strong>Libellé :</strong> <?= htmlspecialchars($produit['libelle'] ?? 'libelle non disponible'); ?></p>
         <p><strong>Prix :</strong> <?= number_format($produit['prix'], 2, ',', ' '); ?> €</p>
         <p><strong>Quantité disponible :</strong> <?= htmlspecialchars($produit['quantite_disponible']); ?></p>
         <hr>
@@ -64,24 +91,28 @@ try {
         <p><?= nl2br(htmlspecialchars($produit['description'])); ?></p>
     </section>
 
-    <!-- Avis des utilisateurs -->
     <section class="section">
         <h2 class="title is-4">Avis des utilisateurs</h2>
+        <p><strong>Moyenne des avis :</strong> <?= $moyenne ? number_format($moyenne, 2) : 'Aucun avis'; ?>/5</p>
         <?php if ($avis): ?>
-            <?php foreach ($avis as $avis_item): ?>
-                <div class="box">
+            <?php foreach ($avis as $index => $avis_item): ?>
+                <div class="box avis-item <?= $index >= 2 ? 'is-hidden' : '' ?>">
                     <p><strong>Utilisateur :</strong> <?= htmlspecialchars($avis_item['prenom'] . ' ' . $avis_item['nom']) ?></p>
                     <p><strong>Note :</strong> <?= htmlspecialchars($avis_item['note']) ?>/5</p>
                     <p><?= nl2br(htmlspecialchars($avis_item['commentaire'])) ?></p>
                     <p><small><em>Publié le <?= htmlspecialchars($avis_item['date_avis']) ?></em></small></p>
                 </div>
             <?php endforeach; ?>
+            <?php if (count($avis) > 2): ?>
+                <button id="toggleAvisButton" class="button is-link" onclick="toggleAvis()">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            <?php endif; ?>
         <?php else: ?>
             <p>Aucun avis pour ce produit.</p>
         <?php endif; ?>
     </section>
 
-    <!-- Bouton pour ajouter au panier -->
     <section class="section">
         <h2 class="title is-4">Acheter ce produit</h2>
         <?php if ($produit['quantite_disponible'] > 0): ?>

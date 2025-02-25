@@ -33,12 +33,13 @@ $produits = $pdo->query("SELECT * FROM produits LIMIT 15")->fetchAll(PDO::FETCH_
 // Récupérer les recettes depuis la base de données
 $recettes = $pdo->query("SELECT * FROM recettes LIMIT 15")->fetchAll(PDO::FETCH_ASSOC);
 ?>
+<?php include '../includes/header.php'; ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Accueil</title>
+    
 
     <!-- Polices Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -59,7 +60,6 @@ $recettes = $pdo->query("SELECT * FROM recettes LIMIT 15")->fetchAll(PDO::FETCH_
     <script src="../js/app.js" defer></script>
 </head>
 <body>
-    <?php include '../includes/header.php'; ?>
     <main class="container mt-5">
         <!-- Titre principal -->
         <section class="hero is-primary is-medium has-text-centered fade-in">

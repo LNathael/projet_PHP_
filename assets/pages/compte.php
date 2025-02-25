@@ -121,7 +121,7 @@ $programmes = $programmes->fetchAll();
             </form>
         </section>
 
-        <!-- Affichage des recettes et programmes créés par l'utilisateur -->
+        <!-- Affichage des recettes créées par l'utilisateur -->
         <section class="section">
             <h2 class="title is-5">Vos Recettes</h2>
             <?php if (!empty($recettes)): ?>
@@ -146,6 +146,7 @@ $programmes = $programmes->fetchAll();
             <?php endif; ?>
         </section>
 
+        <!-- Affichage des programmes créés par l'utilisateur -->
         <section class="section">
             <h2 class="title is-5">Vos Programmes</h2>
             <?php if (!empty($programmes)): ?>

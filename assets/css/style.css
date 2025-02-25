@@ -40,21 +40,6 @@
 }
 
 
-/* Reset et styles globaux */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Poppins', Arial, sans-serif;
-    line-height: 1.6;
-    color: var(--text-dark);
-    background-color: #f8f9fa;
-}
-
-
 /* Navigation principale */
 .site-header {
     background: var(--gradient);

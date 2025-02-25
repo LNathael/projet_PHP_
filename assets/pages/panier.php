@@ -13,6 +13,14 @@ if (!isset($_SESSION['user_id'])) {
 // Récupérer l'ID utilisateur depuis la session
 $id_utilisateur = $_SESSION['user_id'];
 
+// Fonction pour mettre à jour le total des quantités dans la session
+function updateCartQuantity($pdo, $id_utilisateur) {
+    $stmt = $pdo->prepare("SELECT SUM(quantite) as total_quantity FROM panier WHERE id_utilisateur = ?");
+    $stmt->execute([$id_utilisateur]);
+    $result = $stmt->fetch();
+    $_SESSION['cart_quantity'] = $result['total_quantity'] ?? 0;
+}
+
 // Actions sur le panier
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
@@ -61,6 +69,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$id_utilisateur]);
             break;
     }
+
+    // Mettre à jour le total des quantités dans la session
+    updateCartQuantity($pdo, $id_utilisateur);
 }
 
 // Récupérer les produits du panier
@@ -72,6 +83,9 @@ $stmt = $pdo->prepare("
 ");
 $stmt->execute([$id_utilisateur]);
 $panier = $stmt->fetchAll();
+
+// Mettre à jour le total des quantités dans la session au chargement de la page
+updateCartQuantity($pdo, $id_utilisateur);
 ?>
 
 <?php include '../includes/header.php'; ?>

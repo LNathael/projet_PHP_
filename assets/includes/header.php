@@ -6,9 +6,9 @@ if (session_status() === PHP_SESSION_NONE) {
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projet Achat</title>
+    <title>MuscleTalk</title>
 
     <!-- Bulma & FontAwesome -->
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
@@ -23,9 +23,24 @@ if (session_status() === PHP_SESSION_NONE) {
     <!-- Styles principaux -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="shortcut icon" type="image/png" href="../img/logo.png" />
+    <link rel="manifest" href="/manifest.json">
 
     <!-- Scripts -->
+    <script src="/assets/js/theme-toggle.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(function(registration) {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                })
+                .catch(function(error) {
+                    console.log('Service Worker registration failed:', error);
+                });
+        }
+    </script>
+    
 </head>
 <body>
 <header class="site-header">
@@ -79,10 +94,9 @@ if (session_status() === PHP_SESSION_NONE) {
                     <a href="../pages/panier.php" class="navbar-item">
                         <i class="fas fa-shopping-cart"></i>
                         <span class="tag is-danger is-rounded">
-                            <?= isset($_SESSION['cart_count']) ? $_SESSION['cart_count'] : 0 ?>
+                            <?= isset($_SESSION['cart_quantity']) ? $_SESSION['cart_quantity'] : 0 ?>
                         </span>
                     </a>
-
                     <?php if (isset($_SESSION['user_id'])): ?>
                         <div class="navbar-item has-dropdown is-hoverable">
                             <a class="navbar-link">Mon Compte</a>
