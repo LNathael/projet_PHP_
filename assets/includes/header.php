@@ -103,6 +103,8 @@ if (session_status() === PHP_SESSION_NONE) {
                             <div class="navbar-dropdown">
                                 <a href="../pages/compte.php" class="navbar-item">Profil</a>
                                 <a href="../pages/deconnexion.php" class="navbar-item">Déconnexion</a>
+                                <button id="theme-toggle" class="button is-light ml-auto">Toggle Theme</button>
+
                             </div>
                         </div>
                     <?php else: ?>

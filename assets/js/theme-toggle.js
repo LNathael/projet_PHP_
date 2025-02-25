@@ -2,12 +2,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const toggleButton = document.getElementById('theme-toggle');
     const currentTheme = localStorage.getItem('theme') || 'light';
 
-    document.body.classList.add(currentTheme + '-mode');
+    document.documentElement.setAttribute('data-theme', currentTheme);
 
     toggleButton.addEventListener('click', function () {
-        const newTheme = document.body.classList.contains('light-mode') ? 'dark' : 'light';
-        document.body.classList.toggle('light-mode');
-        document.body.classList.toggle('dark-mode');
+        const newTheme = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
     });
 });

@@ -1,0 +1,45 @@
+/* Dark mode styles generated from SCSS */
+:root {
+  --bulma-scheme-brightness: dark;
+  --bulma-scheme-main-l: 11%;
+  --bulma-scheme-main-bis-l: 13%;
+  --bulma-scheme-main-ter-l: 15%;
+  --bulma-background-l: 14%;
+  --bulma-border-weak-l: 21%;
+  --bulma-border-l: 24%;
+  --bulma-text-weak-l: 53%;
+  --bulma-text-l: 71%;
+  --bulma-text-strong-l: 93%;
+  --bulma-text-title-l: 100%;
+  --bulma-hover-background-l-delta: 5%;
+  --bulma-active-background-l-delta: 10%;
+  --bulma-hover-border-l-delta: 10%;
+  --bulma-active-border-l-delta: 20%;
+  --bulma-hover-color-l-delta: 5%;
+  --bulma-active-color-l-delta: 10%;
+  --bulma-scheme-main: hsl(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-scheme-main-l));
+  --bulma-shadow: white;
+}
+
+[data-theme="dark"],
+.theme-dark {
+  --bulma-scheme-brightness: dark;
+  --bulma-scheme-main-l: 11%;
+  --bulma-scheme-main-bis-l: 13%;
+  --bulma-scheme-main-ter-l: 15%;
+  --bulma-background-l: 14%;
+  --bulma-border-weak-l: 21%;
+  --bulma-border-l: 24%;
+  --bulma-text-weak-l: 53%;
+  --bulma-text-l: 71%;
+  --bulma-text-strong-l: 93%;
+  --bulma-text-title-l: 100%;
+  --bulma-hover-background-l-delta: 5%;
+  --bulma-active-background-l-delta: 10%;
+  --bulma-hover-border-l-delta: 10%;
+  --bulma-active-border-l-delta: 20%;
+  --bulma-hover-color-l-delta: 5%;
+  --bulma-active-color-l-delta: 10%;
+  --bulma-scheme-main: hsl(var(--bulma-scheme-h), var(--bulma-scheme-s), var(--bulma-scheme-main-l));
+  --bulma-shadow: white;
+}
