@@ -81,6 +81,8 @@ $recettes = $pdo->query("SELECT * FROM recettes LIMIT 15")->fetchAll(PDO::FETCH_
                         <a href="../recette/recettes.php" class="button is-link">Recettes</a>
                         <a href="../Avis/avis.php" class="button is-info">Avis</a>
                         <a href="../Salon/salons.php" class="button is-info">💬 Chat Communautaire</a>
+                        <a href="../Journal/journal_entrainement.php" class="button is-success">Journal d'Entraînement</a> <!-- Nouveau bouton -->
+
                     </section>
                     <?php if ($isAdmin || $isSuperAdmin): ?>
                         <section class="section">
