@@ -43,7 +43,7 @@ try {
                             <p><strong>Auteur :</strong> <?= htmlspecialchars($recette['prenom'] . ' ' . $recette['nom']); ?></p>
                             <p><strong>Date :</strong> <?= htmlspecialchars($recette['date_creation']); ?></p>
                             <?php if (!empty($recette['image'])): ?>
-                                <img src="../../<?= htmlspecialchars($recette['image']); ?>" alt="<?= htmlspecialchars($recette['titre']); ?>" style="max-width: 100%; height: auto; margin-top: 10px;">
+                                <img src="../../../<?= htmlspecialchars($recette['image']); ?>" alt="<?= htmlspecialchars($recette['titre']); ?>" style="max-width: 100%; height: auto; margin-top: 10px;">
                             <?php endif; ?>
                             <p><?= htmlspecialchars(substr($recette['description'], 0, 200)) . '...'; ?></p>
                             <br></br>

@@ -43,7 +43,7 @@ if (!$user) {
                 <p><strong>Email :</strong> <?= htmlspecialchars($user['email']); ?></p>
                 <p><strong>Date de création du compte :</strong> <?= htmlspecialchars($user['date_creation']); ?></p>
                 <?php if ($user['photo_profil']): ?>
-                    <img src="../../<?= htmlspecialchars($user['photo_profil']); ?>" alt="Photo de profil" style="max-width: 150px; max-height: 150px;">
+                    <img src="../../../htmlspecialchars($user['photo_profil']); ?>" alt="Photo de profil" style="max-width: 150px; max-height: 150px;">
                 <?php endif; ?>
                 <p><strong>Bio :</strong> <?= nl2br(htmlspecialchars($user['bio'] ?? '')); ?></p>
                 <p><strong>Objectifs Fitness :</strong> <?= nl2br(htmlspecialchars($user['objectifs_fitness'] ?? '')); ?></p>

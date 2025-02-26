@@ -6,7 +6,7 @@ require_once '../config/db.php'; // Inclure la connexion à la base de données
 
 // Vérifier si l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
-    header('Location: connexion.php');
+    header('Location: ../Connexion/connexion.php');
     exit;
 }
 
@@ -124,7 +124,7 @@ updateCartQuantity($pdo, $id_utilisateur);
                         <tr>
                             <td>
                                 <?php if (!empty($item['image'])): ?>
-                                    <img src="../../<?= htmlspecialchars($item['image']); ?>" alt="<?= htmlspecialchars($item['nom_produit']); ?>" class="product-image" style="width: 100px; height: auto;">
+                                    <img src="../../../<?= htmlspecialchars($item['image']); ?>" alt="<?= htmlspecialchars($item['nom_produit']); ?>" class="product-image" style="width: 100px; height: auto;">
                                 <?php endif; ?>
                             </td>
                             <td><?= htmlspecialchars($item['nom_produit']); ?></td>
@@ -166,7 +166,7 @@ updateCartQuantity($pdo, $id_utilisateur);
         <?php endif; ?>
 
         <div class="buttons mt-5">
-            <a href="magasin.php" class="button is-link">Retour au magasin</a>
+            <a href="../Magasin/magasin.php" class="button is-link">Retour au magasin</a>
         </div>
     </div>
 </body>

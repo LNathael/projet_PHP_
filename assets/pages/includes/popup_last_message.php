@@ -15,7 +15,7 @@ $dernier_message = $stmt->fetch(PDO::FETCH_ASSOC);
 if ($dernier_message) :
 ?>
     <div id="popup-message" class="popup">
-        <a href="salons.php?id=<?= $dernier_message['id_salon']; ?>" class="popup-content">
+        <a href="../Salon/salons.php $dernier_message['id_salon']; ?>" class="popup-content">
             <p><strong>Dernier message dans #<?= htmlspecialchars($dernier_message['nom_salon']); ?></strong></p>
             <p><?= htmlspecialchars($dernier_message['contenu']); ?></p>
         </a>
@@ -55,7 +55,7 @@ if ($dernier_message) :
     </script>
 
 <?php endif; ?>
-<audio id="notif-sound" src="../sounds/notification.mp3" preload="auto"></audio>
+<audio id="notif-sound" src="./../../sounds/notification.mp3" preload="auto"></audio>
 <script>
     document.getElementById('notif-sound').play();
 </script>

@@ -42,7 +42,7 @@ try {
                     <p><strong>Programme :</strong></p>
                     <pre><?= htmlspecialchars($programme['programme']); ?></pre>
                     <!-- Bouton pour accéder au détail -->
-                    <a href="detail_programme.php?id=<?= $programme['id_programme']; ?>" class="button is-link">Voir le détail</a>
+                    <a href="../Programme/detail_programme.php?id=<?= $programme['id_programme']; ?>" class="button is-link">Voir le détail</a>
                 </div>
             <?php endforeach; ?>
         <?php else: ?>
@@ -71,7 +71,7 @@ $avis = $stmt->fetchAll();
     <?php else: ?>
         <p>Aucun avis pour ce programme.</p>
     <?php endif; ?>
-    <a href="ajouter_avis.php?type_contenu=programme&contenu_id=<?= $programme_id; ?>" class="button is-link">Donner un avis</a>
+    <a href="../Avis/ajouter_avis.php $programme_id; ?>" class="button is-link">Donner un avis</a>
 </section>
 
 </main>

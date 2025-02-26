@@ -15,17 +15,17 @@ if (isset($_GET['query']) && !empty(trim($_GET['query']))) {
         [
             "titre" => "Livraison et Retours",
             "contenu" => "Nous livrons dans toute la France sous 3 à 5 jours ouvrés. Les frais de livraison sont calculés en fonction du poids.",
-            "lien" => "livraison_retours.php"
+            "lien" => "../footer/livraison_retours.php"
         ],
         [
             "titre" => "FAQ - Questions Fréquentes",
             "contenu" => "Nous acceptons les paiements par carte bancaire, PayPal et virement bancaire. Suivez votre commande avec un numéro de suivi.",
-            "lien" => "faq.php"
+            "lien" => "../footer/faq.php"
         ],
         [
             "titre" => "Blog - Conseils Musculation",
             "contenu" => "Découvrez nos astuces pour la prise de masse, la perte de poids, et les routines adaptées à vos objectifs sportifs.",
-            "lien" => "blog.php"
+            "lien" => "../footer/blog.php"
         ],
     ];
 

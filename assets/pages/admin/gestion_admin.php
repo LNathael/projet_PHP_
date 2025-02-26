@@ -182,7 +182,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_product'])) {
 
     // Gestion de l'image
     if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-        $uploadDir = __DIR__ . '/../../uploads/produits/';
+        $uploadDir = __DIR__ . '/../uploads/produits/';
         $imageName = uniqid('produit_') . '.' . pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
         if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
         if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadDir . $imageName)) {
@@ -365,7 +365,7 @@ $produits = $pdo->query("SELECT * FROM produits ORDER BY nom_produit ASC")->fetc
                     <tr>
                         <td>
                             <?php if (!empty($produit['image'])): ?>
-                                <img src="../../<?= htmlspecialchars($produit['image'] ?? ''); ?>" style="max-width: 100px;">
+                                <img src="../../../<?= htmlspecialchars($produit['image'] ?? ''); ?>" style="max-width: 100px;">
                                 
                             <?php endif; ?>
                         </td>

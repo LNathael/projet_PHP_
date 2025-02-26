@@ -82,7 +82,7 @@ try {
         
         <h2 class="title is-5">Image</h2>
         <?php if (!empty($produit['image'])): ?>
-            <img src="../../<?= htmlspecialchars($produit['image']); ?>" 
+            <img src="../../../<?= htmlspecialchars($produit['image']); ?>" 
                  alt="<?= htmlspecialchars($produit['nom_produit']); ?>" 
                  style="max-width: 100%; height: auto; margin-top: 10px;">
         <?php endif; ?>

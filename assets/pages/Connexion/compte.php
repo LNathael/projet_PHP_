@@ -133,10 +133,10 @@ $programmes = $programmes->fetchAll();
                                 <p><strong>Catégorie :</strong> <?= htmlspecialchars($recette['categorie']); ?></p>
                                 <p><strong>Date :</strong> <?= htmlspecialchars($recette['date_creation']); ?></p>
                                 <?php if (!empty($recette['image'])): ?>
-                                    <img src="../../<?= htmlspecialchars($recette['image']); ?>" alt="<?= htmlspecialchars($recette['titre']); ?>" style="max-width: 100%; height: auto; margin-top: 10px;">
+                                    <img src="../../../<?= htmlspecialchars($recette['image']); ?>" alt="<?= htmlspecialchars($recette['titre']); ?>" style="max-width: 100%; height: auto; margin-top: 10px;">
                                 <?php endif; ?>
                                 <p><?= htmlspecialchars(substr($recette['description'], 0, 200)) . '...'; ?></p>
-                                <a href="detail_recette.php?id=<?= $recette['id_recette']; ?>" class="button is-link">Voir la recette</a>
+                                <a href="../recette/detail_recette.php?id=<?= $recette['id_recette']; ?>" class="button is-link">Voir la recette</a>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -157,10 +157,10 @@ $programmes = $programmes->fetchAll();
                                 <h2 class="title is-4"><?= htmlspecialchars($programme['titre']); ?></h2>
                                 <p><strong>Date :</strong> <?= htmlspecialchars($programme['date_creation']); ?></p>
                                 <?php if (!empty($programme['image'])): ?>
-                                    <img src="../../<?= htmlspecialchars($programme['image']); ?>" alt="<?= htmlspecialchars($programme['titre']); ?>" style="max-width: 100%; height: auto; margin-top: 10px;">
+                                    <img src="../../../<?= htmlspecialchars($programme['image']); ?>" alt="<?= htmlspecialchars($programme['titre']); ?>" style="max-width: 100%; height: auto; margin-top: 10px;">
                                 <?php endif; ?>
                                 <p><?= htmlspecialchars(substr($programme['description'], 0, 200)) . '...'; ?></p>
-                                <a href="detail_programme.php?id=<?= $programme['id_programme']; ?>" class="button is-link">Voir le programme</a>
+                                <a href="../programme/detail_programme.php?id=<?= $programme['id_programme']; ?>" class="button is-link">Voir le programme</a>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -172,7 +172,7 @@ $programmes = $programmes->fetchAll();
 
         <!-- Bouton de déconnexion -->
         <section class="section">
-            <a href="deconnexion.php" class="button is-danger">Se déconnecter</a>
+            <a href="../Connexion/deconnexion.php" class="button is-danger">Se déconnecter</a>
         </section>
     </main>
     <?php include '../includes/footer.php'; ?>

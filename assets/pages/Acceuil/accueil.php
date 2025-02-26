@@ -53,11 +53,11 @@ $recettes = $pdo->query("SELECT * FROM recettes LIMIT 15")->fetchAll(PDO::FETCH_
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <!-- Corriger le chemin du CSS -->
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../../css/style.css">
 
     <!-- Scripts -->
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-    <script src="../js/app.js" defer></script>
+    <script src="../../js/app.js" defer></script>
 </head>
 <body>
     <main class="container mt-5">
@@ -70,17 +70,17 @@ $recettes = $pdo->query("SELECT * FROM recettes LIMIT 15")->fetchAll(PDO::FETCH_
                         <h1 class="title gradient-text">Bienvenue sur notre site</h1>
                         <p class="content hero-content">Découvrez des programmes de musculation personnalisés et des recettes adaptées à vos besoins !</p>
                         <div class="buttons is-centered">
-                            <a href="inscription.php" class="button is-primary is-rounded">Inscription</a>
-                            <a href="connexion.php" class="button is-link is-rounded">Connexion</a>
+                            <a href="../Connexion/inscription.php" class="button is-primary is-rounded">Inscription</a>
+                            <a href="../Connexion/connexion.php" class="button is-link is-rounded">Connexion</a>
                         </div>
                     </section>
                 <?php else: ?>
                     <section class="section">
                         <h1 class="title">Bienvenue <?= htmlspecialchars($user['prenom'] . ' ' . $user['nom']); ?> !</h1>
-                        <a href="programmes_personnalises.php" class="button is-primary">Programmes personnalisés</a>
-                        <a href="recettes.php" class="button is-link">Recettes</a>
-                        <a href="avis.php" class="button is-info">Avis</a>
-                        <a href="salons.php" class="button is-info">💬 Chat Communautaire</a>
+                        <a href="../Programme/programmes_personnalises.php" class="button is-primary">Programmes personnalisés</a>
+                        <a href="../recette/recettes.php" class="button is-link">Recettes</a>
+                        <a href="../Avis/avis.php" class="button is-info">Avis</a>
+                        <a href="../Salon/salons.php" class="button is-info">💬 Chat Communautaire</a>
                     </section>
                     <?php if ($isAdmin || $isSuperAdmin): ?>
                         <section class="section">
@@ -99,9 +99,9 @@ $recettes = $pdo->query("SELECT * FROM recettes LIMIT 15")->fetchAll(PDO::FETCH_
                 <div class="swiper-wrapper">
                     <?php foreach ($produits as $produit): ?>
                         <div class="swiper-slide product-card">
-                            <a href="<?= $isConnected ? 'detail_produit.php?id=' . $produit['id_produit'] : 'connexion.php'; ?>">
+                            <a href="<?= $isConnected ? '../Produit/detail_produit.php?id=' . $produit['id_produit'] : '../Connexion/connexion.php'; ?>">
                                 <div class="card-image-wrapper">
-                                    <img src="../../<?= htmlspecialchars($produit['image']); ?>" alt="<?= htmlspecialchars($produit['nom_produit']); ?>">
+                                    <img src="../../../<?= htmlspecialchars($produit['image']); ?>" alt="<?= htmlspecialchars($produit['nom_produit']); ?>">
                                 </div>
                                 <p class="product-title"><?= htmlspecialchars($produit['nom_produit']); ?></p>
                             </a>
@@ -123,9 +123,9 @@ $recettes = $pdo->query("SELECT * FROM recettes LIMIT 15")->fetchAll(PDO::FETCH_
                 <div class="swiper-wrapper">
                     <?php foreach ($recettes as $recette): ?>
                         <div class="swiper-slide recipe-card">
-                            <a href="<?= $isConnected ? 'detail_recette.php?id=' . $recette['id_recette'] : 'connexion.php'; ?>">
+                            <a href="<?= $isConnected ? '../recette/detail_recette.php?id=' . $recette['id_recette'] : '../Connexion/connexion.php'; ?>">
                                 <div class="card-image-wrapper">
-                                    <img src="../../<?= htmlspecialchars($recette['image']); ?>" alt="<?= htmlspecialchars($recette['titre']); ?>">
+                                    <img src="../../../<?= htmlspecialchars($recette['image']); ?>" alt="<?= htmlspecialchars($recette['titre']); ?>">
                                 </div>
                                 <p class="recipe-title"><?= htmlspecialchars($recette['titre']); ?></p>
                             </a>

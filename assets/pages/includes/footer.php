@@ -1,7 +1,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculateur</title>
     
     <!-- Polices Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,7 +12,7 @@
     
     <!-- Styles principaux -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../../css/style.css">
 </head>
 <footer class="footer has-background-dark has-text-white">
     <div class="container">
@@ -29,10 +28,9 @@
             <div class="column">
                 <h2 class="title is-5 has-text-white">Liens utiles</h2>
                 <ul>
-                    <li><a href="../pages/mentions_legales.php" class="has-text-light">Mentions légales</a></li>
-                    <li><a href="../pages/livraison_retours.php" class="has-text-light">Livraison et Retours</a></li>
-                    <li><a href="../pages/cgv.php" class="has-text-light">Conditions Générales de Vente</a></li>
-                    <li><a href="../pages/faq.php" class="has-text-light">FAQ</a></li>
+                    <li><a href="../footer/mentions_legales.php" class="has-text-light">Mentions légales</a></li>
+                    <li><a href="../footer/livraison_retours.php" class="has-text-light">Livraison et Retours</a></li>
+                    <li><a href="../footer/faq.php" class="has-text-light">FAQ</a></li>
                 </ul>
             </div>
 

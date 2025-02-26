@@ -29,7 +29,7 @@ $produits = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     <!-- Styles principaux -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../../css/style.css">
 </head>
 <body>
     <main class="container">
@@ -45,7 +45,7 @@ $produits = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <div class="product-image-wrapper">
                                 <?php if (!empty($produit['image'])): ?>
                                     <a href="detail_produit.php?id=<?= $produit['id_produit']; ?>">
-                                        <img src="../../<?= htmlspecialchars($produit['image']); ?>" 
+                                        <img src="../../../<?= htmlspecialchars($produit['image']); ?>" 
                                              alt="<?= htmlspecialchars($produit['nom_produit']); ?>" 
                                              class="product-image">
                                     </a>
@@ -62,7 +62,7 @@ $produits = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 
                                 <?php if (isset($_SESSION['user_id'])): ?>
                                     <?php if ($produit['quantite_disponible'] > 0): ?>
-                                        <form method="POST" action="panier.php" class="add-to-cart-form">
+                                        <form method="POST" action="../Panier/panier.php" class="add-to-cart-form">
                                             <input type="hidden" name="id_produit" value="<?= $produit['id_produit']; ?>">
                                             <div class="field has-addons">
                                                 <div class="control">

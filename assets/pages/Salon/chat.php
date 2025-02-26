@@ -72,7 +72,7 @@ $produits = $pdo->query("SELECT * FROM produits")->fetchAll();
                 <div class="message-header">
                     <a href="profil_utilisateur.php?id=<?= $message['id_utilisateur']; ?>">
                         <?php if ($message['photo_profil']): ?>
-                            <img src="../../<?= htmlspecialchars($message['photo_profil']); ?>" alt="Photo de profil" class="profile-image">
+                            <img src="../../../<?= htmlspecialchars($message['photo_profil']); ?>" alt="Photo de profil" class="profile-image">
                         <?php else: ?>
                             <img src="../../uploads/profils/default.png" alt="Photo de profil" class="profile-image">
                         <?php endif; ?>
@@ -106,12 +106,12 @@ $produits = $pdo->query("SELECT * FROM produits")->fetchAll();
                     <?php if ($message['recette_titre']): ?>
                         <div class="box mt-3">
                             <h2 class="title is-5"><?= htmlspecialchars($message['recette_titre']); ?></h2>
-                            <img src="../../<?= htmlspecialchars($message['recette_image']); ?>" alt="Image de la recette" class="image-apercu">
+                            <img src="../../../<?= htmlspecialchars($message['recette_image']); ?>" alt="Image de la recette" class="image-apercu">
                         </div>
                     <?php elseif ($message['nom_produit']): ?>
                         <div class="box mt-3">
                             <h2 class="title is-5"><?= htmlspecialchars($message['nom_produit']); ?></h2>
-                            <img src="../../<?= htmlspecialchars($message['produit_image']); ?>" alt="Image du produit" class="image-apercu">
+                            <img src="../../../<?= htmlspecialchars($message['produit_image']); ?>" alt="Image du produit" class="image-apercu">
                         </div>
                     <?php endif; ?>
                     <div class="mt-2">

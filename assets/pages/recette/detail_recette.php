@@ -84,7 +84,7 @@ try {
         <hr>
         <h2 class="title is-5">Image</h2>
         <?php if (!empty($recette['image'])): ?>
-            <img src="../../<?= htmlspecialchars($recette['image']); ?>" alt="<?= htmlspecialchars($recette['titre']); ?>" style="max-width: 100%; height: auto; margin-top: 10px;">
+            <img src="../../../<?= htmlspecialchars($recette['image']); ?>" alt="<?= htmlspecialchars($recette['titre']); ?>" style="max-width: 100%; height: auto; margin-top: 10px;">
         <?php endif; ?>
         <br></br>
         <h2 class="title is-5">Description</h2>

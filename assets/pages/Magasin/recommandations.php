@@ -47,7 +47,7 @@ $produits = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <h2 class="title is-4"><?= htmlspecialchars($produit['nom_produit']); ?></h2>
                             <p><strong>Prix :</strong> <?= htmlspecialchars($produit['prix']); ?> €</p>
                             <?php if (!empty($produit['image'])): ?>
-                                <img src="../../<?= htmlspecialchars($produit['image']); ?>" alt="<?= htmlspecialchars($produit['nom_produit']); ?>" style="max-width: 100%; height: auto; margin-top: 10px;">
+                                <img src="../../../<?= htmlspecialchars($produit['image']); ?>" alt="<?= htmlspecialchars($produit['nom_produit']); ?>" style="max-width: 100%; height: auto; margin-top: 10px;">
                             <?php endif; ?>
                             <p><?= htmlspecialchars(substr($produit['description'], 0, 200)) . '...'; ?></p>
                             <a href="detail_produit.php?id=<?= $produit['id_produit']; ?>" class="button is-link">Voir le produit</a>

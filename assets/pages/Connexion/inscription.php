@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['user_id'] = $pdo->lastInsertId();
                 $_SESSION['email'] = $email;
 
-                header("Location: acceuil.php");
+                header("Location: Acceuil/acceuil.php");
                 exit();
             }
         } catch (PDOException $e) {
@@ -154,7 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </form>
             <div class="has-text-centered" style="margin-top: 20px;">
-                <p>Déjà inscrit ? <a href="connexion.php">Connectez-vous</a></p>
+                <p>Déjà inscrit ? <a href="Connexion/connexion.php">Connectez-vous</a></p>
             </div>
         </div>
     </div>

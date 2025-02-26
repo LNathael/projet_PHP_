@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['email'] = $utilisateur['email'];
                 $_SESSION['role'] = $utilisateur['role']; // Gestion des rôles
 
-                header("Location: accueil.php");
+                header("Location: ../Acceuil/accueil.php");
                 exit();
             } else {
                 $erreurs[] = "Email ou mot de passe incorrect.";
@@ -36,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+<?php include '../includes/header.php'; ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
