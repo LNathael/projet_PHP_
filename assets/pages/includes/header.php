@@ -99,12 +99,11 @@ if (session_status() === PHP_SESSION_NONE) {
                     </a>
                     <?php if (isset($_SESSION['user_id'])): ?>
                         <div class="navbar-item has-dropdown is-hoverable">
-                            <a class="navbar-link">Mon Compte</a>
+                            <a class="navbar-link" id="user-name"><?= htmlspecialchars($user['prenom'] . ' ' . $user['nom']) ?></a>
                             <div class="navbar-dropdown">
                                 <a href="../Connexion/compte.php" class="navbar-item">Profil</a>
                                 <a href="../Connexion/connexion.php" class="navbar-item">Déconnexion</a>
                                 <button id="theme-toggle" class="button is-light ml-auto">Toggle Theme</button>
-
                             </div>
                         </div>
                     <?php else: ?>
@@ -120,3 +119,20 @@ if (session_status() === PHP_SESSION_NONE) {
         </div>
     </nav>
 </header>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const userNameElement = document.getElementById('user-name');
+        const originalText = userNameElement.textContent;
+
+        userNameElement.addEventListener('mouseover', function () {
+            userNameElement.textContent = 'Mon Compte';
+        });
+
+        userNameElement.addEventListener('mouseout', function () {
+            userNameElement.textContent = originalText;
+        });
+    });
+</script>
+</body>
+</html>

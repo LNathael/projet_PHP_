@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             <?php endif; ?>
 
-            <form action="" method="POST">
+            <form action="" method="POST" id="seance-form">
                 <div class="field">
                     <label class="label">Date</label>
                     <div class="control">
@@ -90,35 +90,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <div id="exercises-container">
-                    <div class="field">
-                        <label class="label">Exercice</label>
-                        <div class="control">
-                            <div class="select">
-                                <select name="exercice_ids[]">
-                                    <?php foreach ($exercices as $exercice): ?>
-                                        <option value="<?= $exercice['id_exercice']; ?>"><?= htmlspecialchars($exercice['nom']); ?></option>
-                                    <?php endforeach; ?>
-                                </select>
+                    <div class="box exercise-box">
+                        <div class="field">
+                            <label class="label">Exercice</label>
+                            <div class="control">
+                                <div class="select">
+                                    <select name="exercice_ids[]">
+                                        <?php foreach ($exercices as $exercice): ?>
+                                            <option value="<?= $exercice['id_exercice']; ?>"><?= htmlspecialchars($exercice['nom']); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="field">
-                        <label class="label">Poids (kg)</label>
-                        <div class="control">
-                            <input class="input" type="number" step="0.01" name="poids[]" required>
+                        <div class="field">
+                            <label class="label">Poids (kg)</label>
+                            <div class="control">
+                                <input class="input" type="number" step="0.01" name="poids[]" required>
+                            </div>
                         </div>
-                    </div>
-                    <div class="field">
-                        <label class="label">Répétitions</label>
-                        <div class="control">
-                            <input class="input" type="number" name="repetitions[]" required>
+                        <div class="field">
+                            <label class="label">Répétitions</label>
+                            <div class="control">
+                                <input class="input" type="number" name="repetitions[]" required>
+                            </div>
                         </div>
-                    </div>
-                    <div class="field">
-                        <label class="label">Ressenti</label>
-                        <div class="control">
-                            <input class="input" type="text" name="ressenti[]">
+                        <div class="field">
+                            <label class="label">Ressenti</label>
+                            <div class="control">
+                                <input class="input" type="text" name="ressenti[]">
+                            </div>
                         </div>
+                        <button type="button" class="button is-danger remove-exercise">Supprimer</button>
                     </div>
                 </div>
 
@@ -130,48 +133,90 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <button class="button is-link is-fullwidth" type="submit">Enregistrer</button>
                 </div>
             </form>
+
+            <section class="section">
+                <h2 class="title">Récapitulatif de la Séance</h2>
+                <div id="recap-container"></div>
+            </section>
         </div>
     </section>
     <?php include '../includes/footer.php'; ?>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Ajouter un nouvel exercice
+            const container = document.getElementById('exercises-container');
+            const recapContainer = document.getElementById('recap-container');
+
             document.getElementById('add-exercise').addEventListener('click', function () {
-                const container = document.getElementById('exercises-container');
                 const exerciseTemplate = `
-                    <div class="field">
-                        <label class="label">Exercice</label>
-                        <div class="control">
-                            <div class="select">
-                                <select name="exercice_ids[]">
-                                    <?php foreach ($exercices as $exercice): ?>
-                                        <option value="<?= $exercice['id_exercice']; ?>"><?= htmlspecialchars($exercice['nom']); ?></option>
-                                    <?php endforeach; ?>
-                                </select>
+                    <div class="box exercise-box">
+                        <div class="field">
+                            <label class="label">Exercice</label>
+                            <div class="control">
+                                <div class="select">
+                                    <select name="exercice_ids[]">
+                                        <?php foreach ($exercices as $exercice): ?>
+                                            <option value="<?= $exercice['id_exercice']; ?>"><?= htmlspecialchars($exercice['nom']); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="field">
-                        <label class="label">Poids (kg)</label>
-                        <div class="control">
-                            <input class="input" type="number" step="0.01" name="poids[]" required>
+                        <div class="field">
+                            <label class="label">Poids (kg)</label>
+                            <div class="control">
+                                <input class="input" type="number" step="0.01" name="poids[]" required>
+                            </div>
                         </div>
-                    </div>
-                    <div class="field">
-                        <label class="label">Répétitions</label>
-                        <div class="control">
-                            <input class="input" type="number" name="repetitions[]" required>
+                        <div class="field">
+                            <label class="label">Répétitions</label>
+                            <div class="control">
+                                <input class="input" type="number" name="repetitions[]" required>
+                            </div>
                         </div>
-                    </div>
-                    <div class="field">
-                        <label class="label">Ressenti</label>
-                        <div class="control">
-                            <input class="input" type="text" name="ressenti[]">
+                        <div class="field">
+                            <label class="label">Ressenti</label>
+                            <div class="control">
+                                <input class="input" type="text" name="ressenti[]">
+                            </div>
                         </div>
+                        <button type="button" class="button is-danger remove-exercise">Supprimer</button>
                     </div>
                 `;
                 container.insertAdjacentHTML('beforeend', exerciseTemplate);
+            });
+
+            container.addEventListener('click', function (e) {
+                if (e.target.classList.contains('remove-exercise')) {
+                    e.target.closest('.exercise-box').remove();
+                }
+            });
+
+            document.getElementById('seance-form').addEventListener('submit', function (e) {
+                e.preventDefault();
+                recapContainer.innerHTML = '';
+
+                const exercises = document.querySelectorAll('.exercise-box');
+                exercises.forEach((exercise, index) => {
+                    const exerciceName = exercise.querySelector('select').selectedOptions[0].text;
+                    const poids = exercise.querySelector('input[name="poids[]"]').value;
+                    const repetitions = exercise.querySelector('input[name="repetitions[]"]').value;
+                    const ressenti = exercise.querySelector('input[name="ressenti[]"]').value;
+
+                    const recapTemplate = `
+                        <div class="box">
+                            <h3 class="title is-5">Exercice ${index + 1}</h3>
+                            <p><strong>Nom :</strong> ${exerciceName}</p>
+                            <p><strong>Poids :</strong> ${poids} kg</p>
+                            <p><strong>Répétitions :</strong> ${repetitions}</p>
+                            <p><strong>Ressenti :</strong> ${ressenti}</p>
+                        </div>
+                    `;
+                    recapContainer.insertAdjacentHTML('beforeend', recapTemplate);
+                });
+
+                // Soumettre le formulaire après l'affichage du récapitulatif
+                this.submit();
             });
         });
     </script>

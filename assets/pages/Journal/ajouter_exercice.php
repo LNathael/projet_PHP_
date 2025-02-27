@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Gérer l'upload de l'image
     if (!empty($_FILES['image']['name'])) {
-        $image_path = '../uploads/' . basename($_FILES['image']['name']);
+        $image_path = '../../uploads' . basename($_FILES['image']['name']);
         if (!move_uploaded_file($_FILES['image']['tmp_name'], $image_path)) {
             $erreurs[] = "Erreur lors de l'upload de l'image.";
         }
@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Gérer l'upload de la vidéo
     if (!empty($_FILES['video']['name'])) {
-        $video_path = '../uploads/' . basename($_FILES['video']['name']);
+        $video_path = '../../uploads' . basename($_FILES['video']['name']);
         if (!move_uploaded_file($_FILES['video']['tmp_name'], $video_path)) {
             $erreurs[] = "Erreur lors de l'upload de la vidéo.";
         }
