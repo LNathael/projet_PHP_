@@ -18,6 +18,20 @@
     --bulma-success: #2ecc71;
     --bulma-dark: #fdfdfd;
 }
+.hero.is-primary {
+    background: url('../img/athlete.jpg') no-repeat center center;
+    background-size: cover;
+}
+
+.hero .title {
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.hero .subtitle {
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
 
 /* Appliquer ces couleurs aux classes Bulma */
 .button.is-primary {

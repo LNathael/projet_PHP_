@@ -3,7 +3,14 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 require_once '../config/db.php'; // Inclure la connexion à la base de données
+include '../includes/session_start.php';
 
+// Rediriger les utilisateurs non connectés vers index.php
+if (!isset($_SESSION['user_id'])) {
+    header('Location: index.php');
+    exit;
+}
+// Vérifiez si l'utilisateur est connecté et définissez les variables de session si nécessaire
 $isConnected = isset($_SESSION['user_id']);
 $isAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'administrateur';
 $isSuperAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'super_administrateur';

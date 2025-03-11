@@ -3,6 +3,9 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 ?>
+<?php
+include '../includes/session_start.php';
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -60,7 +63,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
             <div id="navMenu" class="navbar-menu">
                 <div class="navbar-start">
-                    <a href="../Acceuil/accueil.php" class="navbar-item">Accueil</a>
+                    <a href="../Acceuil/index.php" class="navbar-item">Accueil</a>
                     <a href="../Magasin/magasin.php" class="navbar-item">Magasin</a>
                     <a href="../Calorie/calculateur_calories.php" class="navbar-item">Calculateur de calories</a>
                     <a href="../blog/blog.php" class="navbar-item">Blog</a>
@@ -102,15 +105,19 @@ if (session_status() === PHP_SESSION_NONE) {
                             <a class="navbar-link" id="user-name"><?= htmlspecialchars($user['prenom'] . ' ' . $user['nom']) ?></a>
                             <div class="navbar-dropdown">
                                 <a href="../Connexion/compte.php" class="navbar-item">Profil</a>
-                                <a href="../Connexion/connexion.php" class="navbar-item">Déconnexion</a>
+                                <a href="../Connexion/deconnexion.php" class="navbar-item">Déconnexion</a>
                                 <button id="theme-toggle" class="button is-light ml-auto">Toggle Theme</button>
                             </div>
                         </div>
                     <?php else: ?>
-                        <div class="navbar-item">
-                            <div class="buttons">
-                                <a href="../Connexion/inscription.php" class="button is-primary">S'inscrire</a>
-                                <a href="../Connexion/connexion.php" class="button is-light">Se connecter</a>
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a href="../Acceuil/index.php" class="navbar-link">Compte</a>
+
+                            <div class="navbar-dropdown">
+                            <a href="../Connexion/inscription.php" class="navbar-item">S'inscrire</a>
+                            <a href="../Connexion/connexion.php" class="navbar-item">Se Connecter</a>
+                            <hr class="navbar-divider">
+                            
                             </div>
                         </div>
                     <?php endif; ?>
