@@ -116,7 +116,7 @@ try {
     <section class="section">
         <h2 class="title is-4">Acheter ce produit</h2>
         <?php if ($produit['quantite_disponible'] > 0): ?>
-            <form method="POST" action="panier.php">
+            <form method="POST" action="../Panier/panier.php">
                 <input type="hidden" name="id_produit" value="<?= $produit['id_produit']; ?>">
                 <div class="field has-addons">
                     <div class="control">

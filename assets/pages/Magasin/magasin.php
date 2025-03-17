@@ -44,8 +44,8 @@ $produits = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <div class="product-card">
                             <div class="product-image-wrapper">
                                 <?php if (!empty($produit['image'])): ?>
-                                    <a href="detail_produit.php?id=<?= $produit['id_produit']; ?>">
-                                        <img src="../../../<?= htmlspecialchars($produit['image']); ?>" 
+                                    <a href="../Produit/detail_produit.php? <?= $produit['id_produit']; ?>">
+                                        <img src="../../../?= htmlspecialchars($produit['image']); ?>" 
                                              alt="<?= htmlspecialchars($produit['nom_produit']); ?>" 
                                              class="product-image">
                                     </a>
