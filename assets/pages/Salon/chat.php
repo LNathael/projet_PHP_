@@ -4,7 +4,7 @@ require_once '../config/db.php';
 
 // Vérifier si l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
-    header('Location: connexion.php');
+    header('Location: Connexion/connexion.php');
     exit;
 }
 
