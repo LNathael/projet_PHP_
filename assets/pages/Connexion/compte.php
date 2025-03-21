@@ -4,12 +4,15 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 require_once '../config/db.php';
 
+
 // Vérification si l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
     header('Location: connexion.php');
     exit;
 }
 
+
+// Récupération de l'id de l'utilisateur connecté
 $user_id = $_SESSION['user_id'];
 
 // Récupération des informations de l'utilisateur
@@ -62,7 +65,6 @@ $programmes = $programmes->fetchAll();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mon Compte</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
 </head>
 <body>
     <main class="container mt-5">

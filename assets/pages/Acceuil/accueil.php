@@ -47,23 +47,27 @@ $recettes = $pdo->query("SELECT * FROM recettes LIMIT 15")->fetchAll(PDO::FETCH_
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-
     <!-- Polices Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles principaux -->
+    <link rel="stylesheet" href="../../css/custom.css">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Styles principaux -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
-    <!-- Corriger le chemin du CSS -->
-    <link rel="stylesheet" href="../../css/style.css">
 
-    <!-- Scripts -->
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
+
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+
+    <!-- Custom JS -->
     <script src="../../js/app.js" defer></script>
 </head>
 <body>
@@ -117,9 +121,9 @@ $recettes = $pdo->query("SELECT * FROM recettes LIMIT 15")->fetchAll(PDO::FETCH_
                         </div>
                     <?php endforeach; ?>
                 </div>
-                <!-- Add Pagination -->
+                <!-- Pagination -->
                 <div class="swiper-pagination produits-pagination"></div>
-                <!-- Add Navigation -->
+                <!-- Navigation -->
                 <div class="swiper-button-next produits-button-next"></div>
                 <div class="swiper-button-prev produits-button-prev"></div>
             </div>
@@ -141,8 +145,11 @@ $recettes = $pdo->query("SELECT * FROM recettes LIMIT 15")->fetchAll(PDO::FETCH_
                         </div>
                     <?php endforeach; ?>
                 </div>
-                <!-- Add Pagination -->
+                <!-- Pagination -->
                 <div class="swiper-pagination recettes-pagination"></div>
+                <!-- Navigation -->
+                <div class="swiper-button-next recettes-button-next"></div>
+                <div class="swiper-button-prev recettes-button-prev"></div>
             </div>
         </section>
 

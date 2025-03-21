@@ -28,12 +28,12 @@ $salons = $stmt->fetchAll();
     <div class="columns is-multiline">
         <?php foreach ($salons as $salon): ?>
             <div class="column is-half">
-                <a href="chat.php?salon=<?= $salon['id_salon']; ?>" class="box has-text-centered">
-                    <h2 class="title is-5">
-                        <i class="fas fa-comments"></i> <?= htmlspecialchars($salon['nom_salon']); ?>
-                    </h2>
-                    <p><?= nl2br(htmlspecialchars($salon['description'])); ?></p>
-                </a>
+            <a href="chat.php?salon=<?= $salon['id_salon']; ?>" class="box has-text-centered">
+                <h2 class="title is-5">
+                    <i class="fas fa-comments"></i> <?= htmlspecialchars($salon['nom_salon']); ?>
+                </h2>
+                <p><?= nl2br(htmlspecialchars($salon['description'])); ?></p>
+            </a>
             </div>
         <?php endforeach; ?>
     </div>

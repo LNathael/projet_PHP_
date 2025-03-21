@@ -2,36 +2,49 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-?>
-<?php
 include '../includes/session_start.php';
 ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MuscleTalk</title>
 
-    <!-- Bulma & FontAwesome -->
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Styles principaux -->
+
+    <!-- Bulma CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    <link rel="stylesheet" href="../../css/style.css">
+
+    <!-- Bulma-carousel CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.4/dist/css/bulma-carousel.min.css">
+
+    <!-- Bulma-carousel JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.4/dist/js/bulma-carousel.min.js"></script>
+
+    <!-- Styles principaux -->
+    <link rel="stylesheet" href="../../css/custom.css">
+
+    <!-- Favicon et Manifest -->
     <link rel="shortcut icon" type="image/png" href="../../img/logo.png" />
     <link rel="manifest" href="../../json/manifest.json">
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
+
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
 
     <!-- Scripts -->
-    <script src="/assets/js/theme-toggle.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="../../js/theme-toggle.js"></script>
+    <!-- Custom JS -->
+    <script src="../../js/app.js" defer></script>
+    
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/service-worker.js')
@@ -43,7 +56,6 @@ include '../includes/session_start.php';
                 });
         }
     </script>
-    
 </head>
 <body>
 <header class="site-header">
@@ -78,24 +90,27 @@ include '../includes/session_start.php';
                     </div>
                 </div>
 
-                <div class="navbar-end">
-                    <div class="navbar-item">
-                        <form action="../recherche/recherche.php" method="GET">
-                            <div class="field has-addons">
-                                <div class="control">
-                                    <input class="input" type="text" name="query" placeholder="Rechercher...">
-                                </div>
-                                <div class="control">
-                                    <button class="button is-info">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                </div>
+                <!-- Barre de recherche visible uniquement sur les écrans larges -->
+                <div class="navbar-item is-hidden-touch">
+                    <form action="../Recherche/recherche.php" method="GET">
+                        <div class="field has-addons">
+                            <div class="control">
+                                <input class="input" type="text" name="query" placeholder="Rechercher...">
                             </div>
-                        </form>
-                    </div>
+                            <div class="control">
+                                <button class="button is-info" type="submit">
+                                    <span class="icon">
+                                        <i class="fas fa-search"></i>
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
 
+                <div class="navbar-end">
                     <a href="../Panier/panier.php" class="navbar-item">
-                        <i class="fas fa-shopping-cart"></i>
+                        Panier
                         <span class="tag is-danger is-rounded">
                             <?= isset($_SESSION['cart_quantity']) ? $_SESSION['cart_quantity'] : 0 ?>
                         </span>
@@ -112,12 +127,10 @@ include '../includes/session_start.php';
                     <?php else: ?>
                         <div class="navbar-item has-dropdown is-hoverable">
                             <a href="../Acceuil/index.php" class="navbar-link">Compte</a>
-
                             <div class="navbar-dropdown">
-                            <a href="../Connexion/inscription.php" class="navbar-item">S'inscrire</a>
-                            <a href="../Connexion/connexion.php" class="navbar-item">Se Connecter</a>
-                            <hr class="navbar-divider">
-                            
+                                <a href="../Connexion/inscription.php" class="navbar-item">S'inscrire</a>
+                                <a href="../Connexion/connexion.php" class="navbar-item">Se Connecter</a>
+                                <hr class="navbar-divider">
                             </div>
                         </div>
                     <?php endif; ?>
@@ -130,14 +143,24 @@ include '../includes/session_start.php';
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const userNameElement = document.getElementById('user-name');
-        const originalText = userNameElement.textContent;
+        const originalText = userNameElement ? userNameElement.textContent : '';
 
-        userNameElement.addEventListener('mouseover', function () {
-            userNameElement.textContent = 'Mon Compte';
-        });
+        if (userNameElement) {
+            userNameElement.addEventListener('mouseover', function () {
+                userNameElement.textContent = 'Mon Compte';
+            });
 
-        userNameElement.addEventListener('mouseout', function () {
-            userNameElement.textContent = originalText;
+            userNameElement.addEventListener('mouseout', function () {
+                userNameElement.textContent = originalText;
+            });
+        }
+
+        // Fermer les menus déroulants après un clic
+        const dropdowns = document.querySelectorAll('.navbar-item.has-dropdown');
+        dropdowns.forEach(dropdown => {
+            dropdown.addEventListener('click', function () {
+                dropdown.classList.remove('is-hoverable');
+            });
         });
     });
 </script>

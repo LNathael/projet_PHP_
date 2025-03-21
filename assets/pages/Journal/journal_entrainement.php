@@ -12,12 +12,14 @@ $erreurs = [];
 
 // Récupérer les données pour les graphiques
 $stmt = $pdo->prepare("
-    SELECT date, AVG(poids) as poids_moyen, AVG(repetitions) as repetitions_moyennes 
+    SELECT seance_exercice.date AS date_seance, 
+           AVG(seance_exercice.poids) AS poids_moyen, 
+           AVG(seance_exercice.repetitions) AS repetitions_moyennes 
     FROM seance_exercice 
     JOIN entrainements ON seance_exercice.id_entrainement = entrainements.id_entrainement 
-    WHERE id_utilisateur = :id_utilisateur 
-    GROUP BY date 
-    ORDER BY date
+    WHERE entrainements.id_utilisateur = :id_utilisateur 
+    GROUP BY seance_exercice.date 
+    ORDER BY seance_exercice.date
 ");
 $stmt->execute([':id_utilisateur' => $user_id]);
 $performances = $stmt->fetchAll(PDO::FETCH_ASSOC);

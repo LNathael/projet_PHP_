@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_id'])) {
     header('Location: ../Connexion/connexion.php');
     exit;
 }
-
+// Config
 $id_utilisateur = $_SESSION['user_id'];
 
 // Récupérer les notifications de l'utilisateur

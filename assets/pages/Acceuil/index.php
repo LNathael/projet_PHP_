@@ -18,7 +18,7 @@ $selected_video = $videos[array_rand($videos)];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accueil - MuscleTalk</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/custom.css">
     <link rel="shortcut icon" type="image/png" href="img/logo.png" />
     <style>
         .hero-video {

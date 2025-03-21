@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../config/db.php';
+include '../includes/session_start.php';
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: connexion.php');

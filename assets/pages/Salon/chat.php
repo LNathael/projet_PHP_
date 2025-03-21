@@ -70,7 +70,7 @@ $produits = $pdo->query("SELECT * FROM produits")->fetchAll();
         <?php foreach ($messages as $message): ?>
             <div class="message is-info role-<?= htmlspecialchars($message['role']); ?>">
                 <div class="message-header">
-                    <a href="profil_utilisateur.php?id=<?= $message['id_utilisateur']; ?>">
+                    <a href="../Connexion/profil_utilisateur.php?id=<?= $message['id_utilisateur']; ?>">
                         <?php if ($message['photo_profil']): ?>
                             <img src="../../../<?= htmlspecialchars($message['photo_profil']); ?>" alt="Photo de profil" class="profile-image">
                         <?php else: ?>
@@ -177,9 +177,7 @@ $produits = $pdo->query("SELECT * FROM produits")->fetchAll();
         <p class="has-text-danger">Vous n'avez pas le droit d'écrire dans ce salon.</p>
     <?php endif; ?>
 
-    <a href="salons.php" class="button is-light mt-3">Retour aux salons</a>
-</div>
-
+    <a href="salons.php?id_salon=<?= urlencode($dernier_message['id_salon']); ?>" class="button is-light mt-3">Retour aux salons</a>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const recettes = <?= json_encode($recettes); ?>;

@@ -1,8 +1,6 @@
-// Assurez-vous que le DOM est chargé avant d'exécuter les scripts
-document.addEventListener('DOMContentLoaded', () => {
-
+// Assurez-vous que le DOM est chargé avant d'exécuter les scriptsdocument.addEventListener('DOMContentLoaded', () => {
     // Initialiser Swiper pour les produits
-    var produitsSwiper = new Swiper('.produits-swiper', {
+    new Swiper('.produits-swiper', {
         slidesPerView: 1,
         spaceBetween: 10,
         navigation: {
@@ -30,13 +28,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Initialiser Swiper pour les recettes
-    var recettesSwiper = new Swiper('.recettes-swiper', {
+    new Swiper('.recettes-swiper', {
         slidesPerView: 1,
         spaceBetween: 10,
-        loop: true,
-        autoplay: {
-            delay: 3000,
-            disableOnInteraction: false,
+        navigation: {
+            nextEl: '.recettes-button-next',
+            prevEl: '.recettes-button-prev',
         },
         pagination: {
             el: '.recettes-pagination',
@@ -58,6 +55,36 @@ document.addEventListener('DOMContentLoaded', () => {
         },
     });
 
+    // Initialiser Swiper pour les commentaires
+    new Swiper('.commentaires-swiper', {
+        slidesPerView: 1,
+        spaceBetween: 10,
+        navigation: {
+            nextEl: '.commentaires-button-next',
+            prevEl: '.commentaires-button-prev',
+        },
+        pagination: {
+            el: '.commentaires-pagination',
+            clickable: true,
+        },
+        breakpoints: {
+            640: {
+                slidesPerView: 2,
+                spaceBetween: 20,
+            },
+            768: {
+                slidesPerView: 3,
+                spaceBetween: 30,
+            },
+            1024: {
+                slidesPerView: 4,
+                spaceBetween: 40,
+            },
+        },
+    });
+
+
+    
     // Gestion interactive du panier avec AJAX
     const addToCartButtons = document.querySelectorAll('.add-to-cart');
     if (addToCartButtons) {
@@ -87,19 +114,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
-
-    // Carrousel simple pour afficher des images en boucle
-    const carousels = document.querySelectorAll('.carousel');
-    carousels.forEach(carousel => {
-        const slides = carousel.querySelectorAll('.slide');
-        let currentIndex = 0;
-
-        setInterval(() => {
-            slides[currentIndex].classList.remove('active');
-            currentIndex = (currentIndex + 1) % slides.length;
-            slides[currentIndex].classList.add('active');
-        }, 3000); // Change toutes les 3 secondes
-    });
 
     // Gestion des popups
     const popupTrigger = document.querySelector('.popup-trigger');

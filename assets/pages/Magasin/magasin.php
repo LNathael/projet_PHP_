@@ -10,6 +10,7 @@ $produits = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <?php include '../includes/header.php'; ?>
 
+
 <!DOCTYPE html>
 <html lang="fr">
 <!DOCTYPE html>
@@ -44,16 +45,19 @@ $produits = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <div class="product-card">
                             <div class="product-image-wrapper">
                                 <?php if (!empty($produit['image'])): ?>
-                                    <a href="../Produit/detail_produit.php? <?= $produit['id_produit']; ?>">
-                                        <img src="../../../?= htmlspecialchars($produit['image']); ?>" 
-                                             alt="<?= htmlspecialchars($produit['nom_produit']); ?>" 
-                                             class="product-image">
+                                    <a href="../Produit/detail_produit.php?id=<?= $produit['id_produit']; ?>">
+                                        <img src="../../../<?= htmlspecialchars($produit['image']); ?>" 
+                                            alt="<?= htmlspecialchars($produit['nom_produit']); ?>" 
+                                            style="max-width: 150px; height: auto; margin-top: 10px;">
                                     </a>
+
+
+                                   
                                 <?php endif; ?>
                             </div>
                             <div class="product-content">
                                 <div>
-                                    <a href="detail_produit.php?id=<?= $produit['id_produit']; ?>">
+                                    <a href="../Produit/detail_produit.php?id=<?= $produit['id_produit']; ?>">
                                         <h2 class="product-title"><?= htmlspecialchars($produit['nom_produit']); ?></h2>
                                     </a>
                                     <p class="product-description"><?= nl2br(htmlspecialchars($produit['description'])); ?></p>
