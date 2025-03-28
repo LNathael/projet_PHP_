@@ -14,20 +14,28 @@ $erreurs = [];
 $exercices = $pdo->query("SELECT * FROM exercices")->fetchAll(PDO::FETCH_ASSOC);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $date = trim($_POST['date'] ?? '');
+    // Utiliser la date fournie par le formulaire ou la date du jour par défaut
+    $date = trim($_POST['date'] ?? date('Y-m-d'));
     $exercice_ids = $_POST['exercice_ids'] ?? [];
     $poids = $_POST['poids'] ?? [];
     $repetitions = $_POST['repetitions'] ?? [];
+    $series = $_POST['series'] ?? [];
     $ressenti = $_POST['ressenti'] ?? [];
 
-    if (empty($date) || empty($exercice_ids) || empty($poids) || empty($repetitions)) {
+    // Validation des champs obligatoires
+    if (empty($date) || empty($exercice_ids) || empty($poids) || empty($repetitions) || empty($series)) {
         $erreurs[] = "Tous les champs obligatoires doivent être remplis.";
     }
-
+    $stmt = $pdo->prepare("INSERT INTO entrainements (id_utilisateur, date) VALUES (:id_utilisateur, :date)");
+    $stmt->execute([
+    ':id_utilisateur' => $user_id,
+    ':date' => $date
+]);
     if (empty($erreurs)) {
         try {
             $pdo->beginTransaction();
 
+            // Insérer la séance dans la table `entrainements`
             $stmt = $pdo->prepare("INSERT INTO entrainements (id_utilisateur, date) VALUES (:id_utilisateur, :date)");
             $stmt->execute([
                 ':id_utilisateur' => $user_id,
@@ -36,13 +44,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $id_entrainement = $pdo->lastInsertId();
 
+            // Insérer les exercices associés à la séance
             foreach ($exercice_ids as $index => $id_exercice) {
-                $stmt = $pdo->prepare("INSERT INTO seance_exercice (id_entrainement, id_exercice, poids, repetitions, ressenti) VALUES (:id_entrainement, :id_exercice, :poids, :repetitions, :ressenti)");
+                $stmt = $pdo->prepare("INSERT INTO seance_exercice (id_entrainement, id_exercice, poids, repetitions, series, ressenti) VALUES (:id_entrainement, :id_exercice, :poids, :repetitions, :series, :ressenti)");
                 $stmt->execute([
                     ':id_entrainement' => $id_entrainement,
                     ':id_exercice' => $id_exercice,
                     ':poids' => $poids[$index],
                     ':repetitions' => $repetitions[$index],
+                    ':series' => $series[$index],
                     ':ressenti' => $ressenti[$index] ?? ''
                 ]);
             }
@@ -73,6 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="container">
             <h1 class="title">Ajouter une Séance</h1>
 
+            <!-- Affichage des erreurs -->
             <?php if (!empty($erreurs)): ?>
                 <div class="notification is-danger">
                     <?php foreach ($erreurs as $erreur): ?>
@@ -81,11 +92,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             <?php endif; ?>
 
+            <!-- Formulaire d'ajout de séance -->
             <form action="" method="POST" id="seance-form">
                 <div class="field">
                     <label class="label">Date</label>
                     <div class="control">
-                        <input class="input" type="date" name="date" value="<?= htmlspecialchars($date ?? ''); ?>" required>
+                        <input class="input" type="date" name="date" value="<?= htmlspecialchars($date ?? date('Y-m-d')); ?>" required>
                     </div>
                 </div>
 
@@ -116,6 +128,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                         </div>
                         <div class="field">
+                            <label class="label">Nombre de séries</label>
+                            <div class="control">
+                                <input class="input" type="number" name="series[]" required>
+                            </div>
+                        </div>
+                        <div class="field">
                             <label class="label">Ressenti</label>
                             <div class="control">
                                 <input class="input" type="text" name="ressenti[]">
@@ -133,11 +151,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <button class="button is-link is-fullwidth" type="submit">Enregistrer</button>
                 </div>
             </form>
-
-            <section class="section">
-                <h2 class="title">Récapitulatif de la Séance</h2>
-                <div id="recap-container"></div>
-            </section>
         </div>
     </section>
     <?php include '../includes/footer.php'; ?>
@@ -145,7 +158,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const container = document.getElementById('exercises-container');
-            const recapContainer = document.getElementById('recap-container');
 
             document.getElementById('add-exercise').addEventListener('click', function () {
                 const exerciseTemplate = `
@@ -175,6 +187,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                         </div>
                         <div class="field">
+                            <label class="label">Nombre de séries</label>
+                            <div class="control">
+                                <input class="input" type="number" name="series[]" required>
+                            </div>
+                        </div>
+                        <div class="field">
                             <label class="label">Ressenti</label>
                             <div class="control">
                                 <input class="input" type="text" name="ressenti[]">
@@ -190,33 +208,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (e.target.classList.contains('remove-exercise')) {
                     e.target.closest('.exercise-box').remove();
                 }
-            });
-
-            document.getElementById('seance-form').addEventListener('submit', function (e) {
-                e.preventDefault();
-                recapContainer.innerHTML = '';
-
-                const exercises = document.querySelectorAll('.exercise-box');
-                exercises.forEach((exercise, index) => {
-                    const exerciceName = exercise.querySelector('select').selectedOptions[0].text;
-                    const poids = exercise.querySelector('input[name="poids[]"]').value;
-                    const repetitions = exercise.querySelector('input[name="repetitions[]"]').value;
-                    const ressenti = exercise.querySelector('input[name="ressenti[]"]').value;
-
-                    const recapTemplate = `
-                        <div class="box">
-                            <h3 class="title is-5">Exercice ${index + 1}</h3>
-                            <p><strong>Nom :</strong> ${exerciceName}</p>
-                            <p><strong>Poids :</strong> ${poids} kg</p>
-                            <p><strong>Répétitions :</strong> ${repetitions}</p>
-                            <p><strong>Ressenti :</strong> ${ressenti}</p>
-                        </div>
-                    `;
-                    recapContainer.insertAdjacentHTML('beforeend', recapTemplate);
-                });
-
-                // Soumettre le formulaire après l'affichage du récapitulatif
-                this.submit();
             });
         });
     </script>

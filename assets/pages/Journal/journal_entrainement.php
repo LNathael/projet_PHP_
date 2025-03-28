@@ -56,6 +56,7 @@ $seances = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="buttons">
                 <a href="ajouter_exercice.php" class="button is-primary">Ajouter un Exercice</a>
                 <a href="ajouter_seance.php" class="button is-info">Ajouter une Séance</a>
+                <a href="liste_exercices.php" class="button is-warning">Liste des Exercices</a>
             </div>
 
             <section class="section">

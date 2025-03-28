@@ -39,7 +39,6 @@ include '../includes/session_start.php';
 
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
-
     <!-- Scripts -->
     <script src="../../js/theme-toggle.js"></script>
     <!-- Custom JS -->
@@ -121,7 +120,6 @@ include '../includes/session_start.php';
                             <div class="navbar-dropdown">
                                 <a href="../Connexion/compte.php" class="navbar-item">Profil</a>
                                 <a href="../Connexion/deconnexion.php" class="navbar-item">Déconnexion</a>
-                                <button id="theme-toggle" class="button is-light ml-auto">Toggle Theme</button>
                             </div>
                         </div>
                     <?php else: ?>
